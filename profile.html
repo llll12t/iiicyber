@@ -157,8 +157,8 @@
                     body: JSON.stringify({ action: 'fetchData', userId: userId })
                 });
                 const data = await response.json();
-                data.sort((a, b) => new Date(b[5]) - new Date(a[5]));
-                const row = data.find(row => row[0] === userId);
+                data.sort((a, b) => new Date(b[6]) - new Date(a[6]));
+                const row = data.find(row => row[1] === userId);
                 if (row) {
                     displayData(row);
                 } else {
