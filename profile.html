@@ -91,11 +91,11 @@
             try {
                 const profile = await liff.getProfile();
                 document.getElementById('displayName').innerText = profile.displayName;
-                document.getElementById('userId').innerText = profile.userId;
+                document.getElementById('userId').value = profile.userId;
                 document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
 
                 // Fetch user data from Google Apps Script
-                fetchUserData(profile.userId);
+                fetchData(profile.userId);
             } catch (error) {
                 console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
                 Swal.fire('Error', 'Failed to load user profile.', 'error');
@@ -125,10 +125,10 @@
         }
 
         function displayData(row) {
-            document.getElementById('userlineid').value = row[1] || '';
-            document.getElementById('name').value = row[2] || '';
-            document.getElementById('keynumberId').value = row[3] || '';
-            document.getElementById('keynumber2Id').value = row[4] || '';
+            document.getElementById('userlineId').innerText = row[1] || '';
+            document.getElementById('nameId').innerText = row[2] || '';
+            document.getElementById('keynumberId').innerText = row[3] || '';
+            document.getElementById('keynumber2Id').innerText = row[4] || '';
         }
 
         function showLoading(isLoading) {
@@ -137,8 +137,6 @@
             overlay.style.display = isLoading ? 'flex' : 'none';
             inputs.forEach(input => input.disabled = isLoading);
         }
-
-        
     </script>
 </body>
 
