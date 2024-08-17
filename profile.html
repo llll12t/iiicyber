@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ข้อมูลผู้ใช้s</title>
+    <title>ข้อมูลผู้ใช้</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
@@ -90,7 +90,7 @@
             try {
                 const profile = await liff.getProfile();
                 document.getElementById('displayName').innerText = profile.displayName;
-                document.getElementById('userlineId').innerText = profile.userId;
+                document.getElementById('userlineId').innerText = profile.userlineId;
                 document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
 
                 // Fetch user data from Google Apps Script
