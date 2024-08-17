@@ -66,18 +66,23 @@
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec';
         const LIFF_ID = '2005629952-Zeqeklp9';
+        const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
         window.onload = function () {
-             initializeLiff();
+            initializeLiff();
         };
 
         async function initializeLiff() {
-            await liff.init({ liffId: `${LIFF_ID}` });
-
-            if (liff.isLoggedIn()) {
-                getUserProfile();
-            } else {
-                liff.login();
+            try {
+                await liff.init({ liffId: LIFF_ID });
+                if (liff.isLoggedIn()) {
+                    getUserProfile();
+                } else {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error('LIFF Initialization failed', error);
+                Swal.fire('Error', 'Failed to initialize LIFF.', 'error');
             }
         }
 
@@ -86,12 +91,13 @@
                 const profile = await liff.getProfile();
                 document.getElementById('displayName').innerText = profile.displayName;
                 document.getElementById('userlineId').innerText = profile.userId;
-                document.getElementById('profileImage').src = profile.pictureUrl;
+                document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
 
                 // Fetch user data from Google Apps Script
                 fetchUserData(profile.userId);
             } catch (error) {
                 console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
+                Swal.fire('Error', 'Failed to load user profile.', 'error');
             }
         }
 
@@ -109,7 +115,7 @@
                 document.getElementById('keynumberId').innerText = data.keynumberId || "N/A";
                 document.getElementById('keynumber2Id').innerText = data.keynumber2Id || "N/A";
                 document.getElementById('points').innerText = data.points || "0";
-                document.getElementById('preview').src = data.fileLink || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+                document.getElementById('preview').src = data.fileLink || DEFAULT_IMAGE_URL;
 
             } catch (error) {
                 console.error('Error fetching user data:', error);
