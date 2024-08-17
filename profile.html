@@ -68,7 +68,7 @@
         const LIFF_ID = '2005629952-Zeqeklp9';
 
         window.onload = function () {
-            initializeLiff();
+             initializeLiff();
         };
 
         async function initializeLiff() {
@@ -97,7 +97,7 @@
 
         async function fetchUserData(userlineId) {
             try {
-                const response = await fetch(`${WEB_APP_URL}?action=fetchDataResponse&userlineId=${userlineId}`);
+                const response = await fetch(`${WEB_APP_URL}?action=fetchByUserlineId&userlineId=${userlineId}`);
                 const data = await response.json();
 
                 if (data.error) {
