@@ -104,17 +104,21 @@
         }
     }
 
-    async function fetchData(userId) {
-        try {
-            const response = await fetch(WEB_APP_URL);
-            const data = await response.json();
-            tableData = data.filter(row => row[1] === userId); // Filter rows based on userId
-            displayPage(currentPage);
-            setupPagination();
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+async function fetchData(userId) {
+    try {
+        const response = await fetch(WEB_APP_URL);
+        const data = await response.json();
+        console.log('Fetched Data:', data); // Log the fetched data
+        console.log('User ID:', userId); // Log the userId to verify it's correct
+        tableData = data.filter(row => row[1] === userId); // Filter rows based on userId
+        console.log('Filtered Data:', tableData); // Log the filtered data to check if it's correct
+        displayPage(currentPage);
+        setupPagination();
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
+}
+
 
     function displayPage(page) {
         const startIndex = (page - 1) * rowsPerPage;
