@@ -64,7 +64,7 @@
                         </div>
                         <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
                             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                                 alt="Profile Image" id="picprofile"
+                                 alt="Profile Image" id="profileImage"
                                  class="w-10 h-10 bg-white rounded-lg shadow-lg">
                         </div>
                     </div>
@@ -73,13 +73,7 @@
                         <input type="text" class="input-field bg-gray-50 w-full text-center text-teal-400 text-xs font-bold bg-opacity-0 "
                                id="columnBData" placeholder="Line ID" name="columnBData" readonly>
                     </div>
-                    <div class="mb-5 text-center">
-                        <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                                alt="Default Image" id="profileImage" class="h-16 w-16 object-cover rounded-md">
-                        </div>
-                    </div>
-                  
+                    
                     <!-- Existing fields for name, contact number, and birthday -->
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">ชื่อ-สกุล : </p>
@@ -99,12 +93,6 @@
                                placeholder="วันเกิด" name="columnXData" readonly>
                     </div>
                     
-                    <!-- Image Upload Section -->
-                    <div class="flex items-center space-x-2 mb-4">
-                        <input type="file" id="fileInput" name="fileInput" accept="image/*" class="bg-gray-50 text-gray-900 text-xs p-2 rounded-md" style="display: none;">
-                        <label for="fileInput" class="cursor-pointer bg-teal-400 text-white p-2 rounded-md">Upload Image</label>
-                    </div>
-
                     <!-- Edit and Save Buttons -->
                     <div class="flex justify-center space-x-4">
                         <button id="editBtn" class="bg-yellow-500 text-white p-2 rounded-md">Edit</button>
@@ -146,7 +134,7 @@
                 const userId = profile.userId;
                 document.getElementById('userId').value = userId;
                 document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('picprofile').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
+                document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
                 await fetchData(userId);
             } catch (error) {
                 console.error('Error getting profile data:', error);
@@ -181,7 +169,10 @@
             document.getElementById('columnCData').value = row[2] || '';
             document.getElementById('columnDData').value = row[3] || '';
             document.getElementById('columnXData').value = row[4] || '';
-            document.getElementById('profileImage').src = row[5] || DEFAULT_IMAGE_URL;
+            document.getElementById('columnEData').src = row[5] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+            document.getElementById('columnGData').value = row[6] || '';
+            document.getElementById('columnHData').value = row[7] || '';
+            document.getElementById('columnIData').value = row[8] || '';
         }
 
         function showLoading(isLoading) {
@@ -196,106 +187,67 @@
             }
         }
 
-        document.getElementById('editBtn').addEventListener('click', function () {
-            enableEditing(true);
+        // Existing constants and window.onload function...
+
+document.getElementById('editBtn').addEventListener('click', function () {
+    enableEditing(true);
+});
+
+document.getElementById('saveBtn').addEventListener('click', function () {
+    saveProfileData();
+});
+
+function enableEditing(isEditing) {
+    const inputs = document.querySelectorAll('.input-field');
+    inputs.forEach(input => input.readOnly = !isEditing);
+
+    document.getElementById('editBtn').style.display = isEditing ? 'none' : 'inline-block';
+    document.getElementById('saveBtn').style.display = isEditing ? 'inline-block' : 'none';
+}
+
+async function saveProfileData() {
+    try {
+        const data = {
+            action: 'updateData',
+            userId: document.getElementById('userId').value,
+            columnA: document.getElementById('columnAData').value,
+            columnB: document.getElementById('columnBData').value,
+            columnC: document.getElementById('columnCData').value,
+            columnD: document.getElementById('columnDData').value,
+            columnX: document.getElementById('columnXData').value
+        };
+
+        const response = await fetch(`${WEB_APP_URL}`, {
+            method: 'POST',
+            body: JSON.stringify(data)
         });
 
-        document.getElementById('saveBtn').addEventListener('click', function () {
-            saveProfileData();
-        });
+        const result = await response.text();
 
-        document.getElementById('fileInput').addEventListener('change', async function () {
-            const file = this.files[0];
-            if (file) {
-                const base64Image = await getBase64(file);
-                const userId = document.getElementById('userId').value;
-                
-                // Send the base64 image to the server for updating
-                const response = await fetch(`${WEB_APP_URL}`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'updateImage',
-                        userId: userId,
-                        imageBase64: base64Image
-                    })
-                });
-
-                const imageUrl = await response.text();
-
-                if (imageUrl) {
-                    document.getElementById('profileImage').src = imageUrl;
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Profile image updated successfully',
-                        icon: 'success'
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Failed to update profile image',
-                        icon: 'error'
-                    });
-                }
-            }
-        });
-
-        function enableEditing(isEditing) {
-            const inputs = document.querySelectorAll('.input-field');
-            inputs.forEach(input => input.readOnly = !isEditing);
-
-            document.getElementById('editBtn').style.display = isEditing ? 'none' : 'inline-block';
-            document.getElementById('saveBtn').style.display = isEditing ? 'inline-block' : 'none';
-        }
-
-        async function saveProfileData() {
-            try {
-                const data = {
-                    action: 'updateData',
-                    userId: document.getElementById('userId').value,
-                    columnA: document.getElementById('columnAData').value,
-                    columnB: document.getElementById('columnBData').value,
-                    columnC: document.getElementById('columnCData').value,
-                    columnD: document.getElementById('columnDData').value,
-                    columnX: document.getElementById('columnXData').value,
-                    profileImage: document.getElementById('profileImage').src
-                };
-
-                const response = await fetch(`${WEB_APP_URL}`, {
-                    method: 'POST',
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.text();
-
-                if (result === "Data updated successfully") {
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Profile updated successfully',
-                        icon: 'success'
-                    });
-                } else {
-                    throw new Error('Failed to update data');
-                }
-
-                enableEditing(false);
-            } catch (error) {
-                console.error('Error saving profile data:', error);
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Failed to save profile data. Please try again later.',
-                    icon: 'error'
-                });
-            }
-        }
-
-        function getBase64(file) {
-            return new Promise((resolve, reject) => {
-                let reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
+        if (result === "Data updated successfully") {
+            Swal.fire({
+                title: 'Success',
+                text: 'Profile updated successfully',
+                icon: 'success'
             });
+        } else {
+            throw new Error('Failed to update data');
         }
+
+        enableEditing(false);
+    } catch (error) {
+        console.error('Error saving profile data:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Failed to save profile data. Please try again later.',
+            icon: 'error'
+        });
+    }
+}
+
+// Other existing functions...
+
+
     </script>
 </body>
 
