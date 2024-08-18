@@ -73,7 +73,17 @@
                         <input type="text" class="input-field bg-gray-50 w-full text-center text-teal-400 text-xs font-bold bg-opacity-0 "
                                id="columnBData" placeholder="Line ID" name="columnBData" readonly>
                     </div>
-                    
+ <div class="mb-5 text-center">
+            <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
+                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                    alt="Default Image" id="columnEData" class="h-16 w-16 object-cover rounded-md">
+            </div>
+        </div>
+                    <div class="flex items-center space-x-2 mb-4">
+    <p class="text-gray-300 text-md">อัปโหลดรูปโปรไฟล์ : </p>
+    <input type="file" id="profileImageUpload" class="bg-white text-gray-300 bg-opacity-0" accept="image/*">
+</div>
+
                     <!-- Existing fields for name, contact number, and birthday -->
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">ชื่อ-สกุล : </p>
@@ -245,7 +255,55 @@ async function saveProfileData() {
     }
 }
 
-// Other existing functions...
+document.getElementById('profileImageUpload').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (file) {
+        uploadProfileImage(file);
+    }
+});
+
+async function uploadProfileImage(file) {
+    showLoading(true);
+    const reader = new FileReader();
+    reader.onload = async function (e) {
+        const base64 = e.target.result.split(',')[1]; // Extract base64 data from data URL
+        const data = {
+            action: 'updateImage',
+            userId: document.getElementById('userId').value,
+            imageBase64: base64
+        };
+
+        try {
+            const response = await fetch(`${WEB_APP_URL}`, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            const result = await response.text();
+
+            if (result.startsWith('https://')) {
+                // Success
+                document.getElementById('profileImage').src = result;
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Profile image updated successfully',
+                    icon: 'success'
+                });
+            } else {
+                throw new Error('Failed to update image');
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to upload image. Please try again later.',
+                icon: 'error'
+            });
+        } finally {
+            showLoading(false);
+        }
+    };
+    reader.readAsDataURL(file);
+}
 
 
     </script>
