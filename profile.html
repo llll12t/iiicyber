@@ -121,76 +121,88 @@ async function fetchData(userId) {
 
 
     function displayPage(page) {
-        const startIndex = (page - 1) * rowsPerPage;
-        const endIndex = startIndex + rowsPerPage;
-        const paginatedData = tableData.slice(startIndex, endIndex);
+    const startIndex = (page - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const paginatedData = tableData.slice(startIndex, endIndex);
 
-        const tableBody = document.querySelector('#data-table tbody');
-        tableBody.innerHTML = '';
+    const tableBody = document.querySelector('#data-table tbody');
+    tableBody.innerHTML = '';
 
-        paginatedData.forEach(row => {
-            if (row.every(cell => cell === '')) return;
-
-            const tr = document.createElement('tr');
-
-            const collumA = document.createElement('td');
-            collumA.textContent = row[0];
-            collumA.className = 'py-2 px-4 border-b';
-            tr.appendChild(collumA);
-
-            const collumF = document.createElement('td');
-            if (row[5]) {
-                const img = document.createElement('img');
-                img.src = row[5];
-                img.className = 'h-10 w-10 object-cover';
-                collumF.innerHTML = '';
-                collumF.appendChild(img);
-            } else {
-                collumF.textContent = '';
-            }
-            collumF.className = 'py-2 px-4 border-b';
-            tr.appendChild(collumF);
-
-            const collumC = document.createElement('td');
-            collumC.textContent = row[2];
-            collumC.className = 'py-2 px-4 border-b';
-            tr.appendChild(collumC);
-
-            const collumD = document.createElement('td');
-            collumD.textContent = row[3];
-            collumD.className = 'py-2 px-4 border-b';
-            tr.appendChild(collumD);
-
-            const collumE = document.createElement('td');
-            collumE.textContent = row[4];
-            collumE.className = 'py-2 px-4 border-b';
-            tr.appendChild(collumE);
-
-            const collumB = document.createElement('td');
-            collumB.textContent = row[1];
-            collumB.className = 'py-2 px-4 border-b hidden';
-            tr.appendChild(collumB);
-
-            const actionTd = document.createElement('td');
-            actionTd.className = 'py-2 px-4 justify-center flex space-x-2';
-
-            const editButton = document.createElement('button');
-            editButton.textContent = 'Edit';
-            editButton.className = 'bg-yellow-500 text-white py-2 px-4 border-b rounded hover:bg-yellow-700';
-            editButton.onclick = () => openEditModal(row);
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.className = 'bg-red-500 text-white py-2 px-4 border-b rounded hover:bg-red-700';
-            deleteButton.onclick = () => confirmDelete(row[0]);
-
-            actionTd.appendChild(editButton);
-            actionTd.appendChild(deleteButton);
-            tr.appendChild(actionTd);
-
-            tableBody.appendChild(tr);
-        });
+    if (paginatedData.length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.textContent = 'No data found';
+        td.className = 'py-4 text-center';
+        td.colSpan = 7; // Adjust based on the number of columns in your table
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
+        return;
     }
+
+    paginatedData.forEach(row => {
+        if (row.every(cell => cell === '')) return;
+
+        const tr = document.createElement('tr');
+
+        const collumA = document.createElement('td');
+        collumA.textContent = row[0];
+        collumA.className = 'py-2 px-4 border-b';
+        tr.appendChild(collumA);
+
+        const collumF = document.createElement('td');
+        if (row[5]) {
+            const img = document.createElement('img');
+            img.src = row[5];
+            img.className = 'h-10 w-10 object-cover';
+            collumF.innerHTML = '';
+            collumF.appendChild(img);
+        } else {
+            collumF.textContent = '';
+        }
+        collumF.className = 'py-2 px-4 border-b';
+        tr.appendChild(collumF);
+
+        const collumC = document.createElement('td');
+        collumC.textContent = row[2];
+        collumC.className = 'py-2 px-4 border-b';
+        tr.appendChild(collumC);
+
+        const collumD = document.createElement('td');
+        collumD.textContent = row[3];
+        collumD.className = 'py-2 px-4 border-b';
+        tr.appendChild(collumD);
+
+        const collumE = document.createElement('td');
+        collumE.textContent = row[4];
+        collumE.className = 'py-2 px-4 border-b';
+        tr.appendChild(collumE);
+
+        const collumB = document.createElement('td');
+        collumB.textContent = row[1];
+        collumB.className = 'py-2 px-4 border-b hidden';
+        tr.appendChild(collumB);
+
+        const actionTd = document.createElement('td');
+        actionTd.className = 'py-2 px-4 justify-center flex space-x-2';
+
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.className = 'bg-yellow-500 text-white py-2 px-4 border-b rounded hover:bg-yellow-700';
+        editButton.onclick = () => openEditModal(row);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'bg-red-500 text-white py-2 px-4 border-b rounded hover:bg-red-700';
+        deleteButton.onclick = () => confirmDelete(row[0]);
+
+        actionTd.appendChild(editButton);
+        actionTd.appendChild(deleteButton);
+        tr.appendChild(actionTd);
+
+        tableBody.appendChild(tr);
+    });
+}
+
 
     function setupPagination() {
         const pageCount = Math.ceil(tableData.length / rowsPerPage);
