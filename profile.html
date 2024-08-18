@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body class="bg-gray-100 p-6">
     <div class="max-w-5xl m-auto">
         <table id="data-table" class="min-w-full bg-white border border-gray-200 mt-4 ">
@@ -19,7 +21,7 @@
                     <th class="py-2 px-4 text-left border-b">รหัสพนักงาน</th>
                     <th class="py-2 px-4 text-left border-b">แผนก</th>
                     <th class="py-2 px-4 border-b hidden">UserID</th>
-                    <th class="py-2 px-4 text-center border-b">Action</th>
+                    <th class="py-2 px-4 text-center  border-b">Action</th>
                 </tr>
             </thead>
             <tbody class="text-sm">
@@ -65,82 +67,101 @@
             </form>
         </div>
     </div>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 
     <script>
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxL8vapV0pQ5c8R1t9ojI4Ps5R1v9SzA_Qmf6yACCYjB0TnqihbBB4aAB-n4BGntff4IQ/exec'; 
-    const LIFF_ID = '2005629952-Zeqeklp9';
+    const WEB_APP2_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec';
+    const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+    const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
 
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxL8vapV0pQ5c8R1t9ojI4Ps5R1v9SzA_Qmf6yACCYjB0TnqihbBB4aAB-n4BGntff4IQ/exec'; 
     const rowsPerPage = 10;
     let currentPage = 1;
     let tableData = [];
-
-
     window.onload = async function () {
-        await initializeLiff();
-    };
+            await initializeLiff();
+        };
 
-    async function initializeLiff() {
-        try {
-            await liff.init({ liffId: `${LIFF_ID}` });
-            if (liff.isLoggedIn()) {
-                getUserProfile();
-            } else {
-                liff.login();
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: `${LIFF_ID}` });
+                if (liff.isLoggedIn()) {
+                    getUserProfile();
+                } else {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error('Error initializing LIFF:', error);
             }
-        } catch (error) {
-            console.error('Error initializing LIFF:', error);
         }
-    }
 
-    async function getUserProfile() {
-        try {
-            const profile = await liff.getProfile();
-            const userId = profile.userId;
-            document.getElementById('userId').value = userId;
-            await fetchData(userId);
-        } catch (error) {
-            console.error('Error getting profile data:', error);
+        async function getUserProfile() {
+            try {
+                const profile = await liff.getProfile();
+                const userId = profile.userId;
+                document.getElementById('userId').value = userId;
+                document.getElementById('displayName').value = profile.displayName;
+                document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
+                await fetchData(userId);
+            } catch (error) {
+                console.error('Error getting profile data:', error);
+            }
         }
-    }
 
-async function fetchData(userId) {
-    try {
-        const response = await fetch(WEB_APP_URL);
-        const data = await response.json();
-        console.log('Fetched Data:', data); // Log the fetched data
-        console.log('User ID:', userId); // Log the userId to verify it's correct
-        tableData = data.filter(row => row[1] === userId); // Filter rows based on userId
-        console.log('Filtered Data:', tableData); // Log the filtered data to check if it's correct
-        displayPage(currentPage);
-        setupPagination();
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-}
+        async function fetchData(userId) {
+            showLoading(true);
+            try {
+                const response = await fetch(`${WEB_APP_URL}`, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'fetchData', userId: userId })
+                });
+                const data = await response.json();
+                data.sort((a, b) => new Date(b[6]) - new Date(a[6]));
+                const row = data.find(row => row[1] === userId);
+                if (row) {
+                    displayData(row);
+                } else {
+                    console.log('No data found for userId:', userId);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function displayData(row) {
+            document.getElementById('columnAData').value = row[0] || '';
+            document.getElementById('columnBData').value = row[1] || '';
+            document.getElementById('columnCData').value = row[2] || '';
+            document.getElementById('columnDData').value = row[3] || '';
+            document.getElementById('columnXData').value = row[4] || '';
+            document.getElementById('columnEData').src = row[5] || DEFAULT_IMAGE_URL;
+            document.getElementById('columnGData').value = row[6] || '';
+        }
+
+        function showLoading(isLoading) {
+            const overlay = document.getElementById('loadingOverlay');
+            const inputs = document.querySelectorAll('.input-field');
+            if (isLoading) {
+                overlay.style.display = 'flex';
+                inputs.forEach(input => input.disabled = true);
+            } else {
+                overlay.style.display = 'none';
+                inputs.forEach(input => input.disabled = false);
+            }
+        }
 
 
-    function displayPage(page) {
+function displayPage(page) {
     const startIndex = (page - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
     const paginatedData = tableData.slice(startIndex, endIndex);
 
     const tableBody = document.querySelector('#data-table tbody');
-    tableBody.innerHTML = '';
-
-    if (paginatedData.length === 0) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.textContent = 'No data found';
-        td.className = 'py-4 text-center';
-        td.colSpan = 7; // Adjust based on the number of columns in your table
-        tr.appendChild(td);
-        tableBody.appendChild(tr);
-        return;
-    }
+    tableBody.innerHTML = ''; // Clear existing data
 
     paginatedData.forEach(row => {
-        if (row.every(cell => cell === '')) return;
+        if (row.every(cell => cell === '')) return; // Skip empty rows
 
         const tr = document.createElement('tr');
 
@@ -203,117 +224,119 @@ async function fetchData(userId) {
     });
 }
 
+function setupPagination() {
+    const pageCount = Math.ceil(tableData.length / rowsPerPage);
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
 
-    function setupPagination() {
-        const pageCount = Math.ceil(tableData.length / rowsPerPage);
-        const pagination = document.getElementById('pagination');
-        pagination.innerHTML = '';
+    for (let i = 1; i <= pageCount; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.className = `py-2 px-4 rounded ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'}`;
+        pageButton.onclick = () => {
+            currentPage = i;
+            displayPage(currentPage);
+            updatePaginationButtons();
+        };
+        pagination.appendChild(pageButton);
+    }
+}
 
-        for (let i = 1; i <= pageCount; i++) {
-            const pageButton = document.createElement('button');
-            pageButton.textContent = i;
-            pageButton.className = `py-2 px-4 rounded ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'}`;
-            pageButton.onclick = () => {
-                currentPage = i;
-                displayPage(currentPage);
-                updatePaginationButtons();
-            };
-            pagination.appendChild(pageButton);
+function updatePaginationButtons() {
+    const pagination = document.getElementById('pagination');
+    const buttons = pagination.querySelectorAll('button');
+
+    buttons.forEach((button, index) => {
+        if (index + 1 === currentPage) {
+            button.className = 'py-2 px-4 rounded bg-blue-500 text-white';
+        } else {
+            button.className = 'py-2 px-4 rounded bg-gray-300 text-gray-700';
         }
-    }
-
-    function updatePaginationButtons() {
-        const pagination = document.getElementById('pagination');
-        const buttons = pagination.querySelectorAll('button');
-
-        buttons.forEach((button, index) => {
-            if (index + 1 === currentPage) {
-                button.className = 'py-2 px-4 rounded bg-blue-500 text-white';
-            } else {
-                button.className = 'py-2 px-4 rounded bg-gray-300 text-gray-700';
-            }
-        });
-    }
-
-    async function updateData(collumA, collumB, collumC, collumD, collumE, collumF) {
-        const response = await fetch(WEB_APP_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `method=update&collumA=${collumA}&collumB=${encodeURIComponent(collumB)}&collumC=${encodeURIComponent(collumC)}&collumD=${encodeURIComponent(collumD)}&collumE=${encodeURIComponent(collumE)}&collumF=${encodeURIComponent(collumF)}`
-        });
-        const result = await response.text();
-        Swal.fire({
-            title: 'Success',
-            text: result,
-            icon: 'success',
-            confirmButtonText: 'OK'
-        });
-        fetchData(document.getElementById('userId').value); // Reload the data to see the updated data
-    }
-
-    async function deleteData(collumA) {
-        const response = await fetch(WEB_APP_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `method=delete&collumA=${collumA}`
-        });
-        const result = await response.text();
-        Swal.fire({
-            title: 'Deleted',
-            text: result,
-            icon: 'success',
-            confirmButtonText: 'OK'
-        });
-        fetchData(document.getElementById('userId').value); // Reload the data to see the updated data
-    }
-
-    function openEditModal(row) {
-        document.getElementById('edit-id').value = row[0];
-        document.getElementById('edit-userID').value = row[1];
-        document.getElementById('edit-name').value = row[2];
-        document.getElementById('edit-employeeID').value = row[3];
-        document.getElementById('edit-department').value = row[4];
-        document.getElementById('edit-imageUrl').value = row[5];
-        document.getElementById('edit-modal').classList.remove('hidden');
-    }
-
-    function closeModal() {
-        document.getElementById('edit-modal').classList.add('hidden');
-    }
-
-    function confirmDelete(collumA) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                deleteData(collumA);
-            }
-        });
-    }
-
-    document.getElementById('edit-form').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const collumA = document.getElementById('edit-id').value;
-        const collumB = document.getElementById('edit-userID').value;
-        const collumC = document.getElementById('edit-name').value;
-        const collumD = document.getElementById('edit-employeeID').value;
-        const collumE = document.getElementById('edit-department').value;
-        const collumF = document.getElementById('edit-imageUrl').value;
-
-        updateData(collumA, collumB, collumC, collumD, collumE, collumF);
-        closeModal();
     });
+}
+
+async function updateData(collumA, collumB, collumC, collumD, collumE, collumF) {
+    const response = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `method=update&collumA=${collumA}&collumB=${encodeURIComponent(collumB)}&collumC=${encodeURIComponent(collumC)}&collumD=${encodeURIComponent(collumD)}&collumE=${encodeURIComponent(collumE)}&collumF=${encodeURIComponent(collumF)}`
+    });
+    const result = await response.text();
+    Swal.fire({
+        title: 'Success',
+        text: result,
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+    fetchData(); // Reload the data to see the updated data
+}
+
+async function deleteData(collumA) {
+    const response = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `method=delete&collumA=${collumA}`
+    });
+    const result = await response.text();
+    Swal.fire({
+        title: 'Deleted',
+        text: result,
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+    fetchData(); // Reload the data to see the updated data
+}
+
+function openEditModal(row) {
+    document.getElementById('edit-id').value = row[0];
+    document.getElementById('edit-userID').value = row[1];
+    document.getElementById('edit-name').value = row[2];
+    document.getElementById('edit-employeeID').value = row[3];
+    document.getElementById('edit-department').value = row[4];
+    document.getElementById('edit-imageUrl').value = row[5];
+    document.getElementById('edit-modal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('edit-modal').classList.add('hidden');
+}
+
+function confirmDelete(collumA) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteData(collumA);
+        }
+    });
+}
+
+document.getElementById('edit-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const collumA = document.getElementById('edit-id').value;
+    const collumB = document.getElementById('edit-userID').value;
+    const collumC = document.getElementById('edit-name').value;
+    const collumD = document.getElementById('edit-employeeID').value;
+    const collumE = document.getElementById('edit-department').value;
+    const collumF = document.getElementById('edit-imageUrl').value;
+
+    updateData(collumA, collumB, collumC, collumD, collumE, collumF);
+    closeModal();
+});
+
+window.onload = fetchData;
 
     </script>
 </body>
+
 </html>
