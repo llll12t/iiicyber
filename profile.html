@@ -11,94 +11,118 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 
     <style>
-        #loadingOverlay {  display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.26); border-radius:15px; 
-            align-items: center; justify-content: center; z-index: 1000; }
+        #loadingOverlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.26);
+            border-radius: 15px;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
 
-        .loading-container { position: relative;  }
+        .loading-container {
+            position: relative;
+        }
 
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes blink {
 
-        .blink { animation: blink 1s infinite; }
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
     </style>
 
 </head>
 
 <body class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen">
-         <div class="max-w-md mx-auto p-4 mt-4">
-            <div class="loading-container">
-                <div id="loadingOverlay">
-                    <div class="text-center text-white">ค้นหารายชื่อ..</div>
-                </div>
-                    <div class="flex justify-center items-center">
-                            <div class=" rounded-2xl shadow-xl p-6">
-                                <div class="flex justify-between items-center mb-6">
-                                    <div>
-                                        <p class="text-gray-100 text-xs">Welcome back</p>
-                                        <p id="displayName" class="bg-slate-900 text-white text-xl font-bold"></p>
-                                    </div>
-                                    <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
-                                        <img src="" alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
-                                    </div>
-                                </div>
+    <div class="w-full mx-auto p-4 mt-4">
+        <div class="loading-container">
+            <div id="loadingOverlay">
+                <div class="text-center text-white">ค้นหารายชื่อ..</div>
+            </div>
+            <div class="flex justify-center items-center">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <p class="text-gray-100 text-xs">Welcome back</p>
+                            <p id="displayName" class="bg-slate-900 text-white text-xl font-bold"></p>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
+                            <img src="" alt="Profile Image" id="profileImage"
+                                class="w-10 h-10 bg-white rounded-lg shadow-lg">
+                        </div>
+                    </div>
 
-                                
-                                <div class="bg-teal-400 text-white p-4 rounded-lg mb-6 shadow-md">
-                                    <div class="flex justify-between">
-                                        <div>
-                                            <p class="text-black text-xs font-bold">POINT</p>
-                                            <p class="text-sm font-bold">RANK A</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-3xl text-teal-900 font-bold text-right" id="points">0</p>
-                                        </div>
-                                    </div>
-                                </div> 
 
-                                <div class="mb-5 text-center">
-                                    <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
-                                        <img class="h-20 w-48 object-cover rounded-2xl mr-4" id="columnEData"
-                                        src="https://lh5.googleusercontent.com/d/14xf-T2-_pa-bpdTEnH9oJT35JR-w9aB2">
-                                    </div>
-                                </div>
-                        
-                                <div class="flex items-center space-x-2 mb-4">
-                                    <p class="text-gray-300 text-md">Line ID:</p>
-                                    <input type="text"
-                                    class="input-field bg-gray-50  text-lg font-bold bg-opacity-0 "
-                                    id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>                                </div>
-                                
-                                <div class="flex items-center space-x-2 mb-4">
-                                    <p class="text-gray-300 text-md">ชื่อ-สกุล:</p>
-                                    <input type="text" class="input-field text-md bg-white  bg-opacity-0 "
-                                    id="columnCData" placeholder="รหัสพนักงาน" name="columnCData" readonly>                     </div>
-                                
-                                <div class="flex items-center space-x-2 mb-4">
-                                    <p class="text-gray-300 text-md">เบอร์ติดต่อ:</p>
-                                    <input type="text" class="input-field text-md bg-white  bg-opacity-0 "
-                                    id="columnDData" placeholder="ตำแหน่ง" name="columnDData" readonly>                           </div>
-                                
-                                <div class="flex items-center space-x-2 mb-4">
-                                    <p class="text-gray-300 text-md">วันเกิด:</p>
-                                    <p id="keynumber2Id" class="text-teal-400 text-md"></p>
-                                </div>
-                                <input type="hidden" id="userId" name="userId">
+                    <div class="bg-teal-400 text-white p-4 rounded-lg mb-6 shadow-md">
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="text-black text-xs font-bold">POINT</p>
+                                <p class="text-sm font-bold">RANK A</p>
                             </div>
-
-                                <input type="hidden" id="userId" name="userId">
-                                <input type="hidden" id="columnAData" name="columnAData">
+                            <div>
+                                <p class="text-3xl text-teal-900 font-bold text-right" id="points">0</p>
                             </div>
-                   
-                </div>
-                </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5 text-center">
+                        <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
+                            <img class="h-20 w-48 object-cover rounded-2xl mr-4" id="columnEData" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">Line ID:</p>
+                        <input type="text" class="input-field bg-gray-50  text-lg font-bold bg-opacity-0 "
+                            id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">ชื่อ-สกุล:</p>
+                        <input type="text" class="input-field text-md bg-white  bg-opacity-0 " id="columnCData"
+                            placeholder="รหัสพนักงาน" name="columnCData" readonly>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">เบอร์ติดต่อ:</p>
+                        <input type="text" class="input-field text-md bg-white  bg-opacity-0 " id="columnDData"
+                            placeholder="ตำแหน่ง" name="columnDData" readonly>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">วันเกิด:</p>
+                        <p id="keynumber2Id" class="text-teal-400 text-md"></p>
+                    </div>
+                    <input type="hidden" id="userId" name="userId">
+                
+
+                <input type="hidden" id="userId" name="userId">
+                <input type="hidden" id="columnAData" name="columnAData">
+            </div>
+
         </div>
-        <script>
-
-            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec'; 
-            const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-            const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
+    </div>
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec';
+        const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+        const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
 
         window.onload = async function () {
-             await initializeLiff();
+            await initializeLiff();
         };
 
         async function initializeLiff() {
@@ -172,6 +196,7 @@
             }
         }
 
-        </script>
+    </script>
 </body>
+
 </html>
