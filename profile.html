@@ -86,44 +86,6 @@
                     </div>
                 </div>
                 </div>
-            <div class="max-w-md mx-auto py-4">
-                <form>
-                    <div class="bg-white relative p-10 shadow-xl rounded-lg w-6/6 mx-auto">
-                        <div class="w-32 mb-5">
-                            <select type="text" id="typeId" name="typeId" class="w-full p-2 rounded ">
-                                <option value="ลาพักร้อน">ลาพักร้อน</option>
-                                <option value="ลาป่วย">ลาป่วย</option>
-                                <option value="ลากิจ">ลากิจ</option>
-                                <option value="อื่นๆ">อื่นๆ</option>
-                            </select>
-                        </div>
-                        <div class="mt-4 flex justify-between mb-5">
-                            <input type="date" id="startDateId" name="startDateId" class="w-1/2 mr-2 p-2 rounded ">
-                            <input type="date" id="endDateId" name="endDateId" class="w-1/2 ml-2 p-2 rounded ">
-                        </div>
-                        <div class="mt-6 mb-5">
-                            <input type="text" id="titleId" name="titleId" placeholder="หัวข้อเรื่อง"
-                                class="w-full p-2 border rounded ">
-                        </div>
-                        <div class="mt-4 mb-5">
-                            <textarea id="detailId" name="detailId" placeholder="รายละเอียด"
-                                class="w-full p-2 border rounded "></textarea>
-                        </div>
-                        <div class="mb-5 text-center bg-gray-100 border py-4">
-                            <label for="file" class="cursor-pointer inline-flex justify-between items-center">
-                                อัพโหลดเอกสาร
-                                <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
-                                    class="hidden">
-                            </label>
-                            <div class="mx-auto text-gray-500 text-xs text-center mt-1">รูปแบบที่รองรับ jpg jpeg png pdf
-                                doc
-                                docx</div>
-                        </div>
-                        <button type="button" id="submitBtn"
-                            class="bg-gradient-to-b from-gray-800 to-gray-900 text-center w-full text-white py-4 px-4 rounded hover:bg-blue-700">บันทึกข้อมูล</button>
-                    </div>
-                </form>
-            </div>
         </div>
         <script>
 
@@ -155,7 +117,6 @@
                 document.getElementById('userId').value = userId;
                 document.getElementById('displayName').value = profile.displayName;
                 document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
-
                 await fetchData(userId);
             } catch (error) {
                 console.error('Error getting profile data:', error);
