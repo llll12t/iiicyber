@@ -16,24 +16,26 @@
         <div class="flex justify-between items-center mb-6">
             <div>
                 <p class="text-gray-100 text-xs">Welcome back</p>
-                <p id="displayName" class="bg-slate-900 text-white text-xl font-bold"></p>
+                <input type="text" class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0 "
+                id="displayName"  name="displayName" readonly>
             </div>
             <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
-                <img src="" alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
+                <img src="" alt="Profile Image" id="profileImage"
+                    class="w-10 h-10 bg-white rounded-lg shadow-lg">
             </div>
         </div>
-    
+
         <div class="bg-teal-400 text-white p-4 rounded-lg mb-6 shadow-md">
             <div class="flex justify-between">
                 <div>
                     <p class="text-black text-xs font-bold">POINT</p>
                     <p class="text-sm font-bold">RANK A</p>
                 </div>
-                <div>
-                    <p class="text-3xl text-teal-900  font-bold text-right">0</p>
+                <div  class="w-16">
+                <input type="text" class="input-field text-2xl bg-white text-right text-black bg-opacity-0 " id="columnGData"  name="columnGData" readonly>
                 </div>
             </div>
-        </div> 
+        </div>
         <form>
             <div class="flex items-center space-x-2 mb-4">
                 <input type="text"
@@ -90,7 +92,6 @@
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec';
         // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
         const LIFF_ID = '2005629952-qexAM7yN'; // LIFF ID
-        const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
 
 
@@ -115,9 +116,6 @@
             try {
                 const profile = await liff.getProfile();
                 document.getElementById('userlineId').value = profile.userId;
-                document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
-
             } catch (error) {
                 console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
             }
@@ -305,101 +303,102 @@
             return true;
         }
 
-        // เพิ่ม event listener สำหรับปุ่มบันทึกข้อมูล
         submitBtn.addEventListener('click', async (event) => {
-            event.preventDefault();
+    event.preventDefault();
 
-            if (!validateForm()) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Validation Error',
-                    text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
-                });
-                return;
-            }
-
-            const isConfirmed = await showConfirmationDialog();
-
-            if (isConfirmed) {
-                submitBtn.disabled = true;
-
-                try {
-                    let obj;
-
-                    if (fileInput.files.length > 0) {
-                        let file = fileInput.files[0];
-                        let base64 = await getBase64(file);
-                        imgPreview.src = `data:${file.type};base64,${base64}`;
-
-                        obj = {
-                            base64: base64,
-                            type: file.type,
-                            name: file.name,
-                            userlineId: userlineIdInput.value,
-                            nameId: nameIdInput.value,
-                            keynumberId: keynumberIdInput.value,
-                            keynumber2Id: keynumber2IdInput.value
-                        };
-                    } else {
-                        let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
-                        let blob = await response.blob();
-                        let base64 = await getBase64(blob);
-
-                        obj = {
-                            base64: base64,
-                            type: "image/png",
-                            name: "Avatar.png",
-                            userlineId: userlineIdInput.value,
-                            nameId: nameIdInput.value,
-                            keynumberId: keynumberIdInput.value,
-                            keynumber2Id: keynumber2IdInput.value
-                        };
-                    }
-
-                    Swal.fire({
-                        title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        html: '<div class="swal2-loading"></div>',
-                        onBeforeOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-
-                    let response = await fetch(url, {
-                        method: "POST",
-                        body: JSON.stringify(obj)
-                    });
-
-                    let data = await response.text();
-
-                    Swal.fire({
-                        title: 'สำเร็จ!',
-                        text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
-                        icon: 'success',
-                        confirmButtonText: 'ปิด',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            liff.closeWindow();
-                        }
-                    });
-                    sendFlexMessage();
-                    console.log(data);
-                } catch (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'เกิดข้อผิดพลาดขณะส่งข้อมูล.',
-                    });
-
-                    console.error(error);
-                } finally {
-                    submitBtn.disabled = false;
-                }
-            } else {
-                Swal.fire('Submission Canceled', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info');
-            }
+    if (!validateForm()) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
         });
+        return;
+    }
+
+    const isConfirmed = await showConfirmationDialog();
+
+    if (isConfirmed) {
+        submitBtn.disabled = true;
+
+        try {
+            let obj;
+
+            if (fileInput.files.length > 0) {
+                let file = fileInput.files[0];
+                let base64 = await getBase64(file);
+                imgPreview.src = `data:${file.type};base64,${base64}`;
+
+                obj = {
+                    base64: base64,
+                    collumA: generateKeyId(),  // Generate unique ID for collumA
+                    collumB: userlineIdInput.value,
+                    collumC: nameIdInput.value,
+                    collumD: keynumberIdInput.value,
+                    collumE: keynumber2IdInput.value,
+                    collumF: "",  // Placeholder for image URL, will be set on server
+                    collumG: 10,  // Default value for points
+                    collumH: Utilities.formatDate(new Date(), 'GMT+7', 'dd-MM-yyyy HH:mm:ss')
+                };
+            } else {
+                obj = {
+                    base64: "",  // Empty if no image
+                    collumA: generateKeyId(),
+                    collumB: userlineIdInput.value,
+                    collumC: nameIdInput.value,
+                    collumD: keynumberIdInput.value,
+                    collumE: keynumber2IdInput.value,
+                    collumF: "",  // Placeholder for image URL
+                    collumG: 10,
+                    collumH: Utilities.formatDate(new Date(), 'GMT+7', 'dd-MM-yyyy HH:mm:ss')
+                };
+            }
+
+            Swal.fire({
+                title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                html: '<div class="swal2-loading"></div>',
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            let response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(obj)
+            });
+
+            let data = await response.text();
+
+            Swal.fire({
+                title: 'สำเร็จ!',
+                text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                icon: 'success',
+                confirmButtonText: 'ปิด',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    liff.closeWindow();
+                }
+            });
+
+            sendFlexMessage();
+            console.log(data);
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'เกิดข้อผิดพลาดขณะส่งข้อมูล.',
+            });
+
+            console.error(error);
+        } finally {
+            submitBtn.disabled = false;
+        }
+    } else {
+        Swal.fire('Submission Canceled', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info');
+    }
+});
+
 
         // ฟังก์ชันสำหรับแสดงกล่องยืนยัน
         async function showConfirmationDialog() {
