@@ -55,12 +55,10 @@
                     <div class="flex justify-between items-center mb-6">
                         <div>
                             <p class="text-gray-100 text-xs">Welcome back</p>
-                            <input type="text" class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0 "
-                                id="displayName" name="displayName" readonly>
+                            <input type="text" class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0" id="displayName" name="displayName" readonly>
                         </div>
                         <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
-                            <img src="" alt="Profile Image" id="profileImage"
-                                class="w-10 h-10 bg-white rounded-lg shadow-lg">
+                            <img src="" alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
                         </div>
                     </div>
 
@@ -71,50 +69,40 @@
                                 <p class="text-sm font-bold">RANK A</p>
                             </div>
                             <div class="w-16">
-                                <input type="text" class="input-field text-2xl bg-white text-right text-black bg-opacity-0 "
-                                    id="columnGData" name="columnGData" readonly>
+                                <input type="text" class="input-field text-2xl bg-white text-right text-black bg-opacity-0" id="columnGData" name="columnGData" readonly>
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-5 text-center">
                         <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
-                            <img class="w-16 h-16 object-cover rounded-xl mr-4" id="columnEData"
-                                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
+                            <img class="w-16 h-16 object-cover rounded-xl mr-4" id="columnEData" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
                         </div>
                     </div>
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">Line ID:</p>
-                        <input type="text" class="input-field bg-gray-50 text-gray-300 text-xs font-bold bg-opacity-0 "
-                            id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>
+                        <input type="text" class="input-field bg-gray-50 text-gray-300 text-xs font-bold bg-opacity-0" id="columnBData" name="columnBData">
                     </div>
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">ชื่อ-สกุล:</p>
-                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
-                            id="columnCData" placeholder="รหัสพนักงาน" name="columnCData" readonly>
+                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0" id="columnCData" name="columnCData">
                     </div>
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">เบอร์ติดต่อ:</p>
-                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
-                            id="columnDData" placeholder="ตำแหน่ง" name="columnDData" readonly>
+                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0" id="columnDData" name="columnDData">
                     </div>
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">วันเกิด:</p>
-                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
-                            id="columnXData" placeholder="ตำแหน่ง" name="columnXData" readonly>
+                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0" id="columnXData" name="columnXData">
                     </div>
 
-                    <!-- Update Button -->
-                    <div class="flex justify-center items-center">
-                        <button id="updateButton" class="bg-blue-500 text-white p-2 rounded"
-                            onclick="updateData()">Update Data</button>
-                    </div>
-
+                    <button class="bg-blue-500 text-white p-2 rounded-md mt-4 w-full" onclick="submitData()">Save Changes</button>
                 </div>
+
                 <input type="hidden" id="userId" name="userId">
                 <input type="hidden" id="columnAData" name="columnAData">
             </div>
@@ -188,42 +176,6 @@
             document.getElementById('columnGData').value = row[6] || '';
         }
 
-        async function updateData() {
-            const userId = document.getElementById('userId').value;
-            const columnAData = document.getElementById('columnAData').value;
-            const columnBData = document.getElementById('columnBData').value;
-            const columnCData = document.getElementById('columnCData').value;
-            const columnDData = document.getElementById('columnDData').value;
-            const columnXData = document.getElementById('columnXData').value;
-            const columnGData = document.getElementById('columnGData').value;
-
-            const updatedData = {
-                action: 'updateData',
-                userId: userId,
-                columnA: columnAData,
-                columnB: columnBData,
-                columnC: columnCData,
-                columnD: columnDData,
-                columnX: columnXData,
-                columnG: columnGData
-            };
-
-            try {
-                const response = await fetch(`${WEB_APP_URL}`, {
-                    method: 'POST',
-                    body: JSON.stringify(updatedData),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const result = await response.text();
-                Swal.fire('Success', result, 'success');
-            } catch (error) {
-                console.error('Error updating data:', error);
-                Swal.fire('Error', 'Failed to update data', 'error');
-            }
-        }
-
         function showLoading(isLoading) {
             const overlay = document.getElementById('loadingOverlay');
             const inputs = document.querySelectorAll('.input-field');
@@ -233,6 +185,38 @@
             } else {
                 overlay.style.display = 'none';
                 inputs.forEach(input => input.disabled = false);
+            }
+        }
+
+        async function submitData() {
+            const data = {
+                action: 'updateData',
+                userId: document.getElementById('userId').value,
+                columnAData: document.getElementById('columnAData').value,
+                columnBData: document.getElementById('columnBData').value,
+                columnCData: document.getElementById('columnCData').value,
+                columnDData: document.getElementById('columnDData').value,
+                columnXData: document.getElementById('columnXData').value,
+            };
+
+            try {
+                const response = await fetch(`${WEB_APP_URL}`, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                const result = await response.text();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated!',
+                    text: result,
+                });
+            } catch (error) {
+                console.error('Error updating data:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to update data.',
+                });
             }
         }
     </script>
