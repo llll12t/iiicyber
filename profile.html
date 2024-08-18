@@ -117,7 +117,7 @@
         <script>
 
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec'; 
-        const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+ const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
         const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
 
         window.onload = async function () {
@@ -195,6 +195,196 @@
                 inputs.forEach(input => input.disabled = false);
             }
         }
+
+
+
+            let url = `${WEB_APP_Leave_URL}`;
+            let fileInput = document.getElementById("file");
+            let userlineIdInput = document.getElementById("userId");
+            let nameIdInput = document.getElementById("columnBData");
+            let numberIdInput = document.getElementById("columnCData");
+            let roleId = document.getElementById("columnDData");
+            let typeId = document.getElementById("typeId");
+            let startDateId = document.getElementById("startDateId");
+            let endDateId = document.getElementById("endDateId");
+            let titleId = document.getElementById("titleId");
+            let detailId = document.getElementById("detailId");
+            let submitBtn = document.getElementById("submitBtn");
+
+            function getBase64(file) {
+                return new Promise((resolve, reject) => {
+                    let reader = new FileReader();
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = error => reject(error);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function validateForm() {
+                const userlineId = userlineIdInput.value.trim();
+                const nameId = nameIdInput.value.trim();
+                const roleIdValue = roleId.value.trim();
+                const typeIdValue = typeId.value.trim();
+                const startDateIdValue = startDateId.value.trim();
+                const endDateIdValue = endDateId.value.trim();
+                const titleIdValue = titleId.value.trim();
+                const detailIdValue = detailId.value.trim();
+
+                if (userlineId === '' || nameId === '' || roleIdValue === '' || typeIdValue === '' || startDateIdValue === '' || endDateIdValue === '' || titleIdValue === '' || detailIdValue === '') {
+                    return false;
+                }
+
+                return true;
+            }
+
+            submitBtn.addEventListener('click', async (event) => {
+                event.preventDefault();
+
+                if (!validateForm()) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Please fill in all required fields.',
+                    });
+                    return;
+                }
+
+                const isConfirmed = await showConfirmationDialog();
+
+                if (isConfirmed) {
+                    submitBtn.disabled = true;
+
+                    try {
+                        let obj = {
+                            userlineId: userlineIdInput.value,
+                            nameId: nameIdInput.value,
+                            roleId: roleId.value,
+                            numberId: numberIdInput.value,
+                            typeId: typeId.value,
+                            startDateId: startDateId.value,
+                            endDateId: endDateId.value,
+                            titleId: titleId.value,
+                            detailId: detailId.value
+                        };
+
+                        if (fileInput.files.length > 0) {
+                            let file = fileInput.files[0];
+                            let base64 = await getBase64(file);
+
+                            obj.base64 = base64;
+                            obj.type = file.type;
+                            obj.name = file.name;
+                        }
+
+                        Swal.fire({
+                            title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            html: '<div class="swal2-loading"></div>',
+                            onBeforeOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        let response = await fetch(url, {
+                            method: "POST",
+                            body: JSON.stringify(obj)
+                        });
+
+                        let data = await response.text();
+
+                        Swal.fire({
+                            title: 'สำเร็จ!',
+                            text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                            icon: 'success',
+                            confirmButtonText: 'ปิด',
+                        }).then(async (result) => {
+                            if (result.isConfirmed) {
+                                // Reset form
+                                document.querySelector('form').reset();
+                                await sendFlexMessage(obj); // Send Flex Message after submission
+                            }
+                        });
+                        console.log(data);
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while submitting data.',
+                        });
+
+                        console.error(error);
+                    } finally {
+                        submitBtn.disabled = false;
+                    }
+                } else {
+                    Swal.fire('Submission Canceled', 'Your data has not been submitted.', 'info');
+                }
+            });
+
+            async function showConfirmationDialog() {
+                const confirmation = await Swal.fire({
+                    title: 'ยืนยันการส่งข้อมูล',
+                    text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'ใช่, ส่งข้อมูล!',
+                    cancelButtonText: 'ไม่, ยกเลิก'
+                });
+
+                return confirmation.isConfirmed;
+            }
+
+            async function sendFlexMessage(data) {
+                const flexMessage = {
+                    type: "flex",
+                    altText: "คำขออนุมัติการลา",
+                    contents: {
+                        type: "bubble",
+                        body: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                { type: "text", text: "🟢 คำขออนุมัติการลา", weight: "bold", size: "md", color: "#1DB446" },
+                                {
+                                    type: "box", layout: "vertical", margin: "lg", spacing: "sm", contents: [
+                                        { type: "text", text: `ชื่อ: ${data.nameId}` },
+                                        { type: "text", text: `เรื่อง: ${data.typeId}` },
+                                        { type: "text", text: `วันเริ่มต้น: ${formatDate(data.startDateId)}` },
+                                        { type: "text", text: `วันสิ้นสุด: ${formatDate(data.endDateId)}` },
+                                        { type: "text", color: '#2d63c7', text: `📋รอการอนุมัติ` }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                };
+                try { await liff.sendMessages([flexMessage]);
+                    liff.closeWindow(); // Close the LIFF window 
+                    console.log("Flex message sent"); }
+                    catch (error) { console.error("Error sending Flex message:", error); }
+            }
+
+            // รับวันที่ในรูปแบบ "YYYY-MM-DD"
+            function getFormattedDate() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            // กำหนดค่าของ input เป็นวันที่ปัจจุบัน
+            document.getElementById('startDateId').value = getFormattedDate();
+            // กำหนดค่าของ input เป็นวันที่ปัจจุบัน
+            document.getElementById('endDateId').value = getFormattedDate();
+
+
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+            }
+
 
         </script>
 </body>
