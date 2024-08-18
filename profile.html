@@ -55,7 +55,7 @@
                 <div class="text-center text-white">ค้นหารายชื่อ..</div>
             </div>
             <div class="flex justify-center items-center">
-                <div class="">
+                <div class=" rounded-2xl shadow-xl p-6">
                     <div class="flex justify-between items-center mb-6">
                         <div>
                             <p class="text-gray-100 text-xs">Welcome back</p>
@@ -75,20 +75,20 @@
                                 <p class="text-sm font-bold">RANK A</p>
                             </div>
                             <div>
-                                <p class="text-3xl text-teal-900 font-bold text-right" id="points">0</p>
+                                <p class="text-3xl text-teal-900 font-bold text-right" id="columnGData">0</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-5 text-center">
                         <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
-                            <img class="h-16 w-16 object-cover roundedl " id="columnEData" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
+                            <img class="h-20 w-48 object-cover rounded-2xl mr-4" id="columnEData" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
                         </div>
                     </div>
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">Line ID:</p>
-                        <input type="text" class="input-field bg-gray-50 text-teal-400 text-md font-bold bg-opacity-0 "
+                        <input type="text" class="input-field bg-gray-50  text-lg font-bold bg-opacity-0 "
                             id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>
                     </div>
 
@@ -106,11 +106,10 @@
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">วันเกิด:</p>
-                        <p id="keynumber2Id" class="text-teal-400 text-md"></p>
+                        <input type="text" class="input-field text-md bg-white  bg-opacity-0 " id="columnXData"
+                        placeholder="ตำแหน่ง" name="columnXData" readonly>
                     </div>
-                    <input type="hidden" id="userId" name="userId">
                 </div>
-
                 <input type="hidden" id="userId" name="userId">
                 <input type="hidden" id="columnAData" name="columnAData">
             </div>
@@ -179,7 +178,8 @@
             document.getElementById('columnBData').value = row[1] || '';
             document.getElementById('columnCData').value = row[2] || '';
             document.getElementById('columnDData').value = row[3] || '';
-            document.getElementById('columnEData').src = row[4] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+            document.getElementById('columnXData').value = row[4] || '';
+            document.getElementById('columnEData').src = row[5] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
             document.getElementById('columnGData').value = row[6] || '';
             document.getElementById('columnHData').value = row[7] || '';
             document.getElementById('columnIData').value = row[8] || '';
