@@ -3,74 +3,127 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ข้อมูลผู้ใช้</title>
+    <title>ข้อมูลส่วนตัว</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+
+    <style>
+        #loadingOverlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.26);
+            border-radius: 15px;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-container {
+            position: relative;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+    </style>
+
 </head>
 
 <body class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen">
-    <div class="w-full p-6">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <p class="text-gray-100 text-xs">Welcome back</p>
-                <p id="displayName" class="bg-slate-900 text-white text-xl font-bold"></p>
+    <div class="w-full mx-auto p-4 mt-4">
+        <div class="loading-container">
+            <div id="loadingOverlay">
+                <div class="text-center text-white">ค้นหารายชื่อ..</div>
             </div>
-            <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
-                <img src="" alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
-            </div>
-        </div>
+            <div class="flex justify-center items-center">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <p class="text-gray-100 text-xs">Welcome back</p>
+                            <input type="text" class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0 "
+                            id="displayName"  name="displayName" readonly>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
+                            <img src="" alt="Profile Image" id="profileImage"
+                                class="w-10 h-10 bg-white rounded-lg shadow-lg">
+                        </div>
+                    </div>
 
-        <div class="bg-teal-400 text-white p-4 rounded-lg mb-6 shadow-md">
-            <div class="flex justify-between">
-                <div>
-                    <p class="text-black text-xs font-bold">POINT</p>
-                    <p class="text-sm font-bold">RANK A</p>
+
+                    <div class="bg-teal-400 text-white p-4 rounded-lg mb-6 shadow-md">
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="text-black text-xs font-bold">POINT</p>
+                                <p class="text-sm font-bold">RANK A</p>
+                            </div>
+                            <div  class="w-16">
+                            <input type="text" class="input-field text-2xl bg-white text-right text-black bg-opacity-0 " id="columnGData"  name="columnGData" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5 text-center">
+                        <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
+                            <img class="w-16 h-16 object-cover rounded-xl mr-4" id="columnEData" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md w-16">Line ID:</p>
+                        <input type="text" class="input-field bg-gray-50  text-gray-300 text-xs font-bold bg-opacity-0 "
+                            id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">ชื่อ-สกุล:</p>
+                        <input type="text" class="input-field text-md bg-white  text-gray-300 bg-opacity-0 " id="columnCData"
+                            placeholder="รหัสพนักงาน" name="columnCData" readonly>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">เบอร์ติดต่อ:</p>
+                        <input type="text" class="input-field text-md bg-white  text-gray-300 bg-opacity-0 " id="columnDData"
+                            placeholder="ตำแหน่ง" name="columnDData" readonly>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">วันเกิด:</p>
+                        <input type="text" class="input-field text-md bg-white  text-gray-300 bg-opacity-0 " id="columnXData"
+                        placeholder="ตำแหน่ง" name="columnXData" readonly>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-3xl text-teal-900 font-bold text-right" id="points">0</p>
-                </div>
+                <input type="hidden" id="userId" name="userId">
+                <input type="hidden" id="columnAData" name="columnAData">
             </div>
-        </div> 
 
-        <div class="mb-5 text-center">
-            <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
-                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                    alt="Default Image" id="preview" class="h-16 w-16 object-cover rounded-md">
-            </div>
         </div>
-
-        <div class="flex items-center space-x-2 mb-4">
-            <p class="text-gray-300 text-md">Line ID:</p>
-            <p id="userlineId" class="text-teal-400 text-md"></p>
-        </div>
-        
-        <div class="flex items-center space-x-2 mb-4">
-            <p class="text-gray-300 text-md">ชื่อ-สกุล:</p>
-            <p id="nameId" class="text-teal-400 text-md"></p>
-        </div>
-        
-        <div class="flex items-center space-x-2 mb-4">
-            <p class="text-gray-300 text-md">เบอร์ติดต่อ:</p>
-            <p id="keynumberId" class="text-teal-400 text-md"></p>
-        </div>
-        
-        <div class="flex items-center space-x-2 mb-4">
-            <p class="text-gray-300 text-md">วันเกิด:</p>
-            <p id="keynumber2Id" class="text-teal-400 text-md"></p>
-        </div>
-        <input type="hidden" id="userId" name="userId">
     </div>
-    
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
- const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec'; 
- const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
- const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec';
+        const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+        const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
 
         window.onload = async function () {
-             await initializeLiff();
+            await initializeLiff();
         };
 
         async function initializeLiff() {
@@ -93,7 +146,6 @@
                 document.getElementById('userId').value = userId;
                 document.getElementById('displayName').value = profile.displayName;
                 document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
-
                 await fetchData(userId);
             } catch (error) {
                 console.error('Error getting profile data:', error);
@@ -123,14 +175,15 @@
         }
 
         function displayData(row) {
-            document.getElementById('columnAData').value = row[0] || 'N/A';
-            document.getElementById('userlineId').value = row[1] || 'N/A';
-            document.getElementById('name').value = row[2] || 'N/A';
-            document.getElementById('keynumberId').value = row[3] || 'N/A';
-            document.getElementById('keynumber2Id').src = row[4] || 'N/A';
-            document.getElementById('preview').value = row[5] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-            document.getElementById('columnHData').value = row[7] || 'N/A';
-            document.getElementById('columnIData').value = row[8] || 'N/A';
+            document.getElementById('columnAData').value = row[0] || '';
+            document.getElementById('columnBData').value = row[1] || '';
+            document.getElementById('columnCData').value = row[2] || '';
+            document.getElementById('columnDData').value = row[3] || '';
+            document.getElementById('columnXData').value = row[4] || '';
+            document.getElementById('columnEData').src = row[5] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+            document.getElementById('columnGData').value = row[6] || '';
+            document.getElementById('columnHData').value = row[7] || '';
+            document.getElementById('columnIData').value = row[8] || '';
         }
 
         function showLoading(isLoading) {
@@ -145,7 +198,6 @@
             }
         }
 
-        
     </script>
 </body>
 
