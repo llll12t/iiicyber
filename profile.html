@@ -116,9 +116,9 @@
         </div>
         <script>
 
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec'; 
- const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-        const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
+            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec'; 
+            const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+            const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
 
         window.onload = async function () {
              await initializeLiff();
@@ -143,8 +143,6 @@
                 const userId = profile.userId;
                 document.getElementById('userId').value = userId;
                 document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
-
                 await fetchData(userId);
             } catch (error) {
                 console.error('Error getting profile data:', error);
