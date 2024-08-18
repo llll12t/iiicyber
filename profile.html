@@ -30,12 +30,9 @@
         }
 
         @keyframes blink {
-
-            0%,
-            100% {
+            0%, 100% {
                 opacity: 1;
             }
-
             50% {
                 opacity: 0.5;
             }
@@ -45,7 +42,6 @@
             animation: blink 1s infinite;
         }
     </style>
-
 </head>
 
 <body class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen">
@@ -60,7 +56,7 @@
                         <div>
                             <p class="text-gray-100 text-xs">Welcome back</p>
                             <input type="text" class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0 "
-                            id="displayName"  name="displayName" readonly>
+                                id="displayName" name="displayName" readonly>
                         </div>
                         <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
                             <img src="" alt="Profile Image" id="profileImage"
@@ -74,48 +70,57 @@
                                 <p class="text-black text-xs font-bold">POINT</p>
                                 <p class="text-sm font-bold">RANK A</p>
                             </div>
-                            <div  class="w-16">
-                            <input type="text" class="input-field text-2xl bg-white text-right text-black bg-opacity-0 " id="columnGData"  name="columnGData" readonly>
+                            <div class="w-16">
+                                <input type="text" class="input-field text-2xl bg-white text-right text-black bg-opacity-0 "
+                                    id="columnGData" name="columnGData" readonly>
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-5 text-center">
                         <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
-                            <img class="w-16 h-16 object-cover rounded-xl mr-4" id="columnEData" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
+                            <img class="w-16 h-16 object-cover rounded-xl mr-4" id="columnEData"
+                                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
                         </div>
                     </div>
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">Line ID:</p>
-                        <input type="text" class="input-field bg-gray-50  text-gray-300 text-xs font-bold bg-opacity-0 "
+                        <input type="text" class="input-field bg-gray-50 text-gray-300 text-xs font-bold bg-opacity-0 "
                             id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>
                     </div>
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">ชื่อ-สกุล:</p>
-                        <input type="text" class="input-field text-md bg-white  text-gray-300 bg-opacity-0 " id="columnCData"
-                            placeholder="รหัสพนักงาน" name="columnCData" readonly>
+                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
+                            id="columnCData" placeholder="รหัสพนักงาน" name="columnCData" readonly>
                     </div>
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">เบอร์ติดต่อ:</p>
-                        <input type="text" class="input-field text-md bg-white  text-gray-300 bg-opacity-0 " id="columnDData"
-                            placeholder="ตำแหน่ง" name="columnDData" readonly>
+                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
+                            id="columnDData" placeholder="ตำแหน่ง" name="columnDData" readonly>
                     </div>
 
                     <div class="flex items-center space-x-2 mb-4">
                         <p class="text-gray-300 text-md">วันเกิด:</p>
-                        <input type="text" class="input-field text-md bg-white  text-gray-300 bg-opacity-0 " id="columnXData"
-                        placeholder="ตำแหน่ง" name="columnXData" readonly>
+                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
+                            id="columnXData" placeholder="ตำแหน่ง" name="columnXData" readonly>
                     </div>
+
+                    <!-- Update Button -->
+                    <div class="flex justify-center items-center">
+                        <button id="updateButton" class="bg-blue-500 text-white p-2 rounded"
+                            onclick="updateData()">Update Data</button>
+                    </div>
+
                 </div>
                 <input type="hidden" id="userId" name="userId">
                 <input type="hidden" id="columnAData" name="columnAData">
             </div>
-
         </div>
     </div>
+
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec';
         const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
@@ -127,7 +132,7 @@
 
         async function initializeLiff() {
             try {
-                await liff.init({ liffId: `${LIFF_ID}` }); // Replace with your LIFF ID
+                await liff.init({ liffId: `${LIFF_ID}` });
                 if (liff.isLoggedIn()) {
                     getUserProfile();
                 } else {
@@ -179,10 +184,44 @@
             document.getElementById('columnCData').value = row[2] || '';
             document.getElementById('columnDData').value = row[3] || '';
             document.getElementById('columnXData').value = row[4] || '';
-            document.getElementById('columnEData').src = row[5] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+            document.getElementById('columnEData').src = row[5] || DEFAULT_IMAGE_URL;
             document.getElementById('columnGData').value = row[6] || '';
-            document.getElementById('columnHData').value = row[7] || '';
-            document.getElementById('columnIData').value = row[8] || '';
+        }
+
+        async function updateData() {
+            const userId = document.getElementById('userId').value;
+            const columnAData = document.getElementById('columnAData').value;
+            const columnBData = document.getElementById('columnBData').value;
+            const columnCData = document.getElementById('columnCData').value;
+            const columnDData = document.getElementById('columnDData').value;
+            const columnXData = document.getElementById('columnXData').value;
+            const columnGData = document.getElementById('columnGData').value;
+
+            const updatedData = {
+                action: 'updateData',
+                userId: userId,
+                columnA: columnAData,
+                columnB: columnBData,
+                columnC: columnCData,
+                columnD: columnDData,
+                columnX: columnXData,
+                columnG: columnGData
+            };
+
+            try {
+                const response = await fetch(`${WEB_APP_URL}`, {
+                    method: 'POST',
+                    body: JSON.stringify(updatedData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const result = await response.text();
+                Swal.fire('Success', result, 'success');
+            } catch (error) {
+                console.error('Error updating data:', error);
+                Swal.fire('Error', 'Failed to update data', 'error');
+            }
         }
 
         function showLoading(isLoading) {
@@ -196,7 +235,6 @@
                 inputs.forEach(input => input.disabled = false);
             }
         }
-
     </script>
 </body>
 
