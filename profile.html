@@ -59,7 +59,7 @@
                         <div>
                             <input type="text"
                                 class="input-field w-16 bg-slate-900 text-white text-3xl text-teal-900 text-right font-bold bg-opacity-0 "
-                                id="columnGData" name="columnGData" readonly>
+                                id="edit_point" name="edit_point" readonly>
                         </div>
                     </div>
                 </div>
@@ -149,6 +149,8 @@
                     document.getElementById('edit-employeeID').value = filteredData[3];
                     document.getElementById('edit-department').value = filteredData[4];
                     document.getElementById('edit-imageUrl').value = filteredData[5];
+                    document.getElementById('edit-point').value = filteredData[6];
+
 
                     updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
                 } else {
