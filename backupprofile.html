@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลส่วนตัว</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+
+    <style>
+        #loadingOverlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.26);
+            border-radius: 15px;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-container {
+            position: relative;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+    </style>
+
+</head>
+
+<body
+    class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen">
+    <div class="w-full mx-auto p-4 mt-4">
+        <div class="loading-container">
+            <div id="loadingOverlay">
+                <div class="text-center text-white">ค้นหารายชื่อ..</div>
+            </div>
+            <div class="flex justify-center items-center">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <p class="text-gray-100 text-xs">Welcome back</p>
+                            <input type="text"
+                                class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0 "
+                                id="displayName" name="displayName" readonly>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
+                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
+                        </div>
+                    </div>
+                    <div class="bg-teal-400 text-white p-4 rounded-lg mb-6 shadow-md">
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="text-black text-xs font-bold">POINT</p>
+                                <p class="text-sm font-bold">RANK A</p>
+                            </div>
+                            <div>
+                                  <input type="text"
+                                class="input-field w-16 bg-slate-900 text-white text-3xl text-teal-900 text-right font-bold bg-opacity-0 "
+                                id="columnGData" name="columnGData" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center border border-teal-400 p-1 space-x-2 rounded-md mb-4">
+                        <input type="text"
+                            class="input-field bg-gray-50 w-full text-center text-teal-400 text-xs font-bold bg-opacity-0 "
+                            id="columnBData" placeholder="Line ID" name="columnBData" readonly>
+                    </div>
+                    <div class="mb-5 text-center">
+                        <div class="w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
+                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                alt="Default Image" id="columnEData" class="h-16 w-16 object-cover rounded-md">
+                        </div>
+                    </div>
+
+                    <!-- Existing fields for name, contact number, and birthday -->
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">ชื่อ-สกุล : </p>
+                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
+                            id="columnCData" placeholder="ชื่อ-สกุล" name="columnCData" readonly>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">เบอร์ติดต่อ : </p>
+                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
+                            id="columnDData" placeholder="เบอร์ติดต่อ" name="columnDData" readonly>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mb-4">
+                        <p class="text-gray-300 text-md">เมล : </p>
+                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
+                            id="columnXData" placeholder="เมล" name="columnXData" readonly>
+                    </div>
+
+                    <!-- Edit and Save Buttons -->
+                    <div class="flex space-x-4">
+                        <button id="editBtn" class="bg-yellow-500 font-bold text-black px-4 py-1 rounded-md">แก้ไข</button>
+                        <button id="saveBtn" class="bg-teal-400 font-bold text-black px-4 py-1 rounded-md" style="display:none;">บันทึก</button>
+                    </div>
+
+                </div>
+                <input type="hidden" id="userId" name="userId">
+                <input type="hidden" id="columnAData" name="columnAData">
+            </div>
+
+        </div>
+    </div>
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec';
+        const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+        const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
+
+        window.onload = async function () {
+              await initializeLiff();
+        };
+
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: `${LIFF_ID}` }); // Replace with your LIFF ID
+                if (liff.isLoggedIn()) {
+                    getUserProfile();
+                } else {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error('Error initializing LIFF:', error);
+            }
+        }
+
+        async function getUserProfile() {
+            try {
+                const profile = await liff.getProfile();
+                const userId = profile.userId;
+                document.getElementById('userId').value = userId;
+                document.getElementById('displayName').value = profile.displayName;
+                document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
+                await fetchData(userId);
+            } catch (error) {
+                console.error('Error getting profile data:', error);
+            }
+        }
+
+        async function fetchData(userId) {
+            showLoading(true);
+            try {
+                const response = await fetch(`${WEB_APP_URL}`, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'fetchData', userId: userId })
+                });
+                const data = await response.json();
+                data.sort((a, b) => new Date(b[6]) - new Date(a[6]));
+                const row = data.find(row => row[1] === userId);
+                if (row) {
+                    displayData(row);
+                } else {
+                    console.log('No data found for userId:', userId);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function displayData(row) {
+            document.getElementById('columnAData').value = row[0] || '';
+            document.getElementById('columnBData').value = row[1] || '';
+            document.getElementById('columnCData').value = row[2] || '';
+            document.getElementById('columnDData').value = row[3] || '';
+            document.getElementById('columnXData').value = row[4] || '';
+            document.getElementById('columnEData').src = row[5] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+            document.getElementById('columnGData').value = row[6] || '';
+            document.getElementById('columnHData').value = row[7] || '';
+            document.getElementById('columnIData').value = row[8] || '';
+        }
+
+        function showLoading(isLoading) {
+            const overlay = document.getElementById('loadingOverlay');
+            const inputs = document.querySelectorAll('.input-field');
+            if (isLoading) {
+                overlay.style.display = 'flex';
+                inputs.forEach(input => input.disabled = true);
+            } else {
+                overlay.style.display = 'none';
+                inputs.forEach(input => input.disabled = false);
+            }
+        }
+
+        // Existing constants and window.onload function...
+
+        document.getElementById('editBtn').addEventListener('click', function () {
+            enableEditing(true);
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', function () {
+            saveProfileData();
+        });
+
+        function enableEditing(isEditing) {
+            const inputs = document.querySelectorAll('.input-field');
+            inputs.forEach(input => input.readOnly = !isEditing);
+
+            document.getElementById('editBtn').style.display = isEditing ? 'none' : 'inline-block';
+            document.getElementById('saveBtn').style.display = isEditing ? 'inline-block' : 'none';
+        }
+
+        async function saveProfileData() {
+            try {
+                const data = {
+                    action: 'updateData',
+                    userId: document.getElementById('userId').value,
+                    columnA: document.getElementById('columnAData').value,
+                    columnB: document.getElementById('columnBData').value,
+                    columnC: document.getElementById('columnCData').value,
+                    columnD: document.getElementById('columnDData').value,
+                    columnX: document.getElementById('columnXData').value
+                };
+
+                const response = await fetch(`${WEB_APP_URL}`, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.text();
+
+                if (result === "Data updated successfully") {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Profile updated successfully',
+                        icon: 'success'
+                    });
+                } else {
+                    throw new Error('Failed to update data');
+                }
+
+                enableEditing(false);
+            } catch (error) {
+                console.error('Error saving profile data:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to save profile data. Please try again later.',
+                    icon: 'error'
+                });
+            }
+        }
+
+        document.getElementById('profileImageUpload').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadProfileImage(file);
+            }
+        });
+
+        async function uploadProfileImage(file) {
+            showLoading(true);
+            const reader = new FileReader();
+            reader.onload = async function (e) {
+                const base64 = e.target.result.split(',')[1]; // Extract base64 data from data URL
+                const data = {
+                    action: 'updateImage',
+                    userId: document.getElementById('userId').value,
+                    imageBase64: base64
+                };
+
+                try {
+                    const response = await fetch(`${WEB_APP_URL}`, {
+                        method: 'POST',
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.text();
+
+                    if (result.startsWith('https://')) {
+                        // Success
+                        document.getElementById('profileImage').src = result;
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Profile image updated successfully',
+                            icon: 'success'
+                        });
+                    } else {
+                        throw new Error('Failed to update image');
+                    }
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Failed to upload image. Please try again later.',
+                        icon: 'error'
+                    });
+                } finally {
+                    showLoading(false);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+
+    </script>
+</body>
+
+</html>
