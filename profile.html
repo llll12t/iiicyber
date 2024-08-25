@@ -138,11 +138,8 @@
         const filteredData = data.filter(row => row[1] === userlineId);
 
         if (filteredData.length > 0) {
-            // สมมติว่าข้อมูลที่มีวันที่อยู่ในคอลัมน์ที่ 7 (index 6)
-            // กรณีที่ข้อมูลไม่มีวันที่ ให้ใช้ index ของตัวที่คุณต้องการเรียงลำดับแทน
-            filteredData.sort((a, b) => new Date(b[6]) - new Date(a[6])); 
-
-            latestData = filteredData[0]; // ข้อมูลล่าสุด
+            // ใช้ข้อมูลจากแถวสุดท้ายที่พบ
+            latestData = filteredData[filteredData.length - 1]; 
 
             // กรอกข้อมูลลงในฟอร์ม
             document.getElementById('edit-id').value = latestData[0];
@@ -172,7 +169,6 @@
         });
     }
 }
-
 
         // เริ่มต้นด้วยการล็อกฟอร์มและซ่อนปุ่ม
         window.onload = async () => {
