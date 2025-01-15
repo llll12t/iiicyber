@@ -26,7 +26,6 @@
         </div>
 
     
-     <div class="bg-teal-400 text-white p-4 rounded-lg mb-6 shadow-md">
 
         
         <form>
@@ -46,7 +45,7 @@
                 <div class="mb-5 text-center">
 
                     <label for="file"
-                        class="cursor-pointer inline-flex justify-between items-center py-2 px-4 rounded-lg shadow-sm text-left text-gray-400 bg-gray-700 hover:bg-gray-900 ">
+                        class="cursor-pointer inline-flex justify-between items-center py-2 px-4 rounded-lg shadow-sm text-left text-gray-400 bg-gray-700 hover:bg-gray-300 hover:text-gray-600 ">
                         <img src="https://img.icons8.com/?size=100&id=748&format=png&color=000000" class="w-6 h-6 mx-1">
                         อัพโหลดรูป
                         <input type="file" id="file" name="file" accept="image/*" class="hidden">
@@ -54,7 +53,6 @@
                     <div class="mx-auto w-48 text-gray-500 text-xs text-center mt-1">คลิกเพื่ออัพโหลดรูปของคุณ</div>
                 </div>
             </div>
-        </div> 
             <div class="flex items-center space-x-2 mb-4">
 
                 <input type="text" class="input-field w-full bg-gray-800 p-2 text-md text-gray-300 rounded-md" id="nameId"
@@ -68,26 +66,20 @@
             <div class="flex items-center space-x-2 mb-6">
 
                 <input type="text" class="input-field w-full bg-gray-800 p-2 text-md text-gray-300 rounded-md"
-                    id="keynumber2Id" placeholder="วันเกิด" name="keynumber2Id" required>
+                    id="keynumber2Id" placeholder="เพิ่มเติม" name="keynumber2Id" required>
             </div>
-            <button type="button" id="submitBtn"
-                class="bg-teal-400 text-center w-full text-teal-900 p-4 rounded-md shadow-md hover:bg-teal-600">บันทึกข้อมูล</button>
+            <button type="button" id="submitBtn" class="bg-teal-400 text-center w-full text-teal-900 p-4 rounded-md shadow-md hover:bg-teal-600">บันทึกข้อมูล</button>
     </div>
     </form>
     </div>
     </div>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
-
-
-
         // ลิ้งจาก ระบบสมาชิก
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec';
         // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
         const LIFF_ID = '2005629952-qexAM7yN'; // LIFF ID
         const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-
-
 
         // ฟังก์ชันเริ่มต้น LIFF SDK
         window.onload = function () {
