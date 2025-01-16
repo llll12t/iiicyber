@@ -49,6 +49,14 @@
                         src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                         alt="Image Preview" class="w-20 h-20 rounded">
                 </div>
+                <div class="bg-teal-400 w-2/3 text-white p-4 rounded flex items-center">
+                    <div class="flex justify-between w-full">
+                        <div>
+                           
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="mb-4 hidden" id="image-upload-section">
                 <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
@@ -157,7 +165,7 @@
 
         // เริ่มต้นด้วยการล็อกฟอร์มและซ่อนปุ่ม
         window.onload = async () => {
-            await initializeLiff(),getUserProfile(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
+           // await initializeLiff(),getUserProfile(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
             toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
         };
 
