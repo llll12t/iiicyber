@@ -49,8 +49,6 @@
                         src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                         alt="Image Preview" class="w-20 h-20 rounded">
                 </div>
-               
-
             </div>
             <div class="mb-4 hidden" id="image-upload-section">
                 <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
@@ -65,7 +63,7 @@
                 <input type="text" id="edit-employeeID" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-department" class="block text-xs text-teal-400">เพิ่มเติม .. </label>
+                <label for="edit-department" class="block text-xs text-teal-400">เพิ่มเติม..</label>
                 <input type="text" id="edit-department" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
             </div>
             <div class="flex justify-start">
@@ -136,7 +134,6 @@
             document.getElementById('edit-employeeID').value = latestData[3];
             document.getElementById('edit-department').value = latestData[4];
             document.getElementById('edit-imageUrl').value = latestData[5];
-            document.getElementById('edit-point').value = latestData[6];
 
             updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
         } else {
