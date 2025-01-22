@@ -1,19 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
+    <!-- LIFF SDK -->
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Lottie Player สำหรับแอนิเมชันโหลด -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
-<body class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen">
-    
-    <div class="max-w-sm w-full p-6 rounded-xl text-white ">
+<body class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen relative">
 
+    <!-- แอนิเมชันโหลด -->
+    <div id="loading" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 hidden">
+        <lottie-player
+            src="https://assets2.lottiefiles.com/packages/lf20_t24tpvcu.json"
+            background="transparent"
+            speed="1"
+            style="width: 150px; height: 150px;"
+            loop
+            autoplay>
+        </lottie-player>
+    </div>
+
+    <!-- เนื้อหาหลักของหน้าเว็บ -->
+    <div class="max-w-sm w-full p-6 rounded-xl text-white ">
         <div class="flex justify-between items-center mb-4">
             <div>
                 <p class="text-gray-100 text-xs">Welcome back</p>
@@ -30,7 +47,6 @@
                 class="input-field bg-gray-50 w-full text-center text-teal-400 text-xs font-bold bg-opacity-0 "
                 id="userId" placeholder="Line ID" name="userId" readonly>
         </div>
-
 
         <form id="edit-form">
 
@@ -77,10 +93,9 @@
         </form>
     </div>
 
-
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxh6MnlWyyyk_zlppsPv8acuyckmCppUaFHuSbEGV2uCU3pHW-dYIpvWVAn12QuyHEW/exec';
-        const LIFF_ID = '2006806033-LlJE1nO7'; // Liff ID
+        const LIFF_ID = '2006806033-LlJE1nO7'; // ใส่ LIFF ID ของคุณที่นี่
 
         let latestData = {};
 
@@ -112,53 +127,74 @@
         function updateImagePreview() {
             const imageUrl = document.getElementById('edit-imageUrl').value;
             const imagePreview = document.getElementById('image-preview');
-            imagePreview.src = imageUrl ? imageUrl : ''; // อัปเดต src ของรูปภาพ
+            imagePreview.src = imageUrl ? imageUrl : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'; // อัปเดต src ของรูปภาพ
+        }
+
+        // ฟังก์ชันเพื่อแสดงแอนิเมชันโหลด
+        function showLoading() {
+            document.getElementById('loading').classList.remove('hidden');
+        }
+
+        // ฟังก์ชันเพื่อซ่อนแอนิเมชันโหลด
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
         }
 
         async function searchDataByUserlineId(userlineId) {
-    try {
-        const response = await fetch(WEB_APP_URL);
-        const data = await response.json();
+            showLoading(); // แสดงแอนิเมชันโหลด
+            try {
+                const response = await fetch(WEB_APP_URL);
+                const data = await response.json();
 
-        // ค้นหาข้อมูลที่ตรงกับ userlineId
-        const filteredData = data.filter(row => row[1] === userlineId);
+                // ค้นหาข้อมูลที่ตรงกับ userlineId
+                const filteredData = data.filter(row => row[1] === userlineId);
 
-        if (filteredData.length > 0) {
-            // ใช้ข้อมูลจากแถวสุดท้ายที่พบ
-            latestData = filteredData[filteredData.length - 1]; 
+                if (filteredData.length > 0) {
+                    // ใช้ข้อมูลจากแถวสุดท้ายที่พบ
+                    latestData = filteredData[filteredData.length - 1];
 
-            // กรอกข้อมูลลงในฟอร์ม
-            document.getElementById('edit-id').value = latestData[0];
-            document.getElementById('edit-userID').value = latestData[1];
-            document.getElementById('edit-name').value = latestData[2];
-            document.getElementById('edit-employeeID').value = latestData[3];
-            document.getElementById('edit-department').value = latestData[4];
-            document.getElementById('edit-imageUrl').value = latestData[5];
+                    // กรอกข้อมูลลงในฟอร์ม
+                    document.getElementById('edit-id').value = latestData[0];
+                    document.getElementById('edit-userID').value = latestData[1];
+                    document.getElementById('edit-name').value = latestData[2];
+                    document.getElementById('edit-employeeID').value = latestData[3];
+                    document.getElementById('edit-department').value = latestData[4];
+                    document.getElementById('edit-imageUrl').value = latestData[5];
 
-            updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
-        } else {
-            Swal.fire({
-                title: 'Not Found',
-                text: 'ไม่พบข้อมูลที่ตรงกับ UserLineID นี้',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-            });
+                    updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
+                } else {
+                    Swal.fire({
+                        title: 'ไม่พบข้อมูล',
+                        text: 'ไม่พบข้อมูลที่ตรงกับ UserLineID นี้',
+                        icon: 'warning',
+                        confirmButtonText: 'ตกลง'
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถดึงข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง'
+                });
+            } finally {
+                hideLoading(); // ซ่อนแอนิเมชันโหลด
+            }
         }
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        Swal.fire({
-            title: 'Error',
-            text: 'Failed to fetch data. Please try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    }
-}
 
         // เริ่มต้นด้วยการล็อกฟอร์มและซ่อนปุ่ม
         window.onload = async () => {
-             await initializeLiff(),getUserProfile(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
-            toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
+            showLoading(); // แสดงแอนิเมชันโหลดเมื่อเริ่มต้น
+            try {
+                await initializeLiff();
+                await getUserProfile(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
+            } catch (error) {
+                console.error('Initialization error:', error);
+            } finally {
+                toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
+                hideLoading(); // ซ่อนแอนิเมชันโหลดเมื่อเริ่มต้นเสร็จสิ้น
+            }
         };
 
         async function initializeLiff() {
@@ -175,6 +211,7 @@
                 console.error('LIFF Initialization failed', error);
             }
         }
+
         // ฟังก์ชันนี้ดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LIFF
         async function getUserProfile() {
             try {
@@ -184,19 +221,21 @@
                 // กำหนดค่า userId และ displayName ในฟอร์ม
                 document.getElementById('userId').value = userId;
                 document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
+                document.getElementById('profileImage').src = profile.pictureUrl || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
             } catch (error) {
                 // ถ้ามีข้อผิดพลาดในการดึงข้อมูลโปรไฟล์ จะทำการล็อกข้อผิดพลาดในคอนโซล
                 console.error('Error getting profile data:', error);
             }
         }
+
         document.getElementById('edit-button').addEventListener('click', function () {
             toggleFormEditing(true); // ปลดล็อกฟอร์มเมื่อกดปุ่มแก้ไข
         });
 
         document.getElementById('edit-form').addEventListener('submit', async function (e) {
             e.preventDefault();
+            showLoading(); // แสดงแอนิเมชันโหลดเมื่อเริ่มบันทึก
 
             const id = document.getElementById('edit-id').value;
             const userID = document.getElementById('edit-userID').value;
@@ -229,10 +268,10 @@
                 // ตรวจสอบผลลัพธ์ที่ได้รับ
                 if (result && result.includes('Data updated')) {
                     Swal.fire({
-                        title: 'Success',
-                        text: 'Data saved successfully!',
+                        title: 'สำเร็จ',
+                        text: 'บันทึกข้อมูลเรียบร้อยแล้ว!',
                         icon: 'success',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'ตกลง'
                     });
                     await initializeLiff(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
                 } else {
@@ -242,16 +281,16 @@
             } catch (error) {
                 console.error('Error saving data:', error);
                 Swal.fire({
-                    title: 'Error',
-                    text: error.message || 'Failed to save data. Please try again.',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: error.message || 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'ตกลง'
                 });
             } finally {
+                hideLoading(); // ซ่อนแอนิเมชันโหลดหลังจากบันทึกเสร็จ
                 cancelEdit();
             }
         });
-
 
         // ฟังก์ชันยกเลิกการแก้ไขและรีเซ็ตฟอร์ม
         function cancelEdit() {
@@ -285,7 +324,6 @@
             return result;
         }
 
-
         // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
         function getBase64(file) {
             return new Promise((resolve, reject) => {
@@ -295,8 +333,6 @@
                 reader.readAsDataURL(file);
             });
         }
-
-
 
     </script>
 </body>
