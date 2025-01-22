@@ -17,8 +17,8 @@
 
 <body class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen relative">
 
-    <!-- แอนิเมชันโหลดพร้อมข้อความ "กำลังโหลด" -->
-    <div id="loading" class="fixed inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 z-50 hidden">
+    <!-- แอนิเมชันโหลด -->
+    <div id="loading" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 hidden">
         <lottie-player
             src="https://assets2.lottiefiles.com/packages/lf20_t24tpvcu.json"
             background="transparent"
@@ -27,7 +27,6 @@
             loop
             autoplay>
         </lottie-player>
-        <p class="text-white mt-4 text-lg">กำลังโหลด...</p>
     </div>
 
     <!-- เนื้อหาหลักของหน้าเว็บ -->
@@ -131,12 +130,12 @@
             imagePreview.src = imageUrl ? imageUrl : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'; // อัปเดต src ของรูปภาพ
         }
 
-        // ฟังก์ชันเพื่อแสดงแอนิเมชันโหลดพร้อมข้อความ "กำลังโหลด"
+        // ฟังก์ชันเพื่อแสดงแอนิเมชันโหลด
         function showLoading() {
             document.getElementById('loading').classList.remove('hidden');
         }
 
-        // ฟังก์ชันเพื่อซ่อนแอนิเมชันโหลดพร้อมข้อความ "กำลังโหลด"
+        // ฟังก์ชันเพื่อซ่อนแอนิเมชันโหลด
         function hideLoading() {
             document.getElementById('loading').classList.add('hidden');
         }
@@ -165,8 +164,8 @@
                     updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
                 } else {
                     Swal.fire({
-                        title: 'ไม่พบข้อมูล',
-                        text: 'ไม่พบข้อมูลที่ตรงกับ UserLineID นี้',
+                        title: 'คุณยังไม่ได้ลงทะเบียน',
+                        text: 'กรุณาลงทะเบียนก่อนใช้งาน',
                         icon: 'warning',
                         confirmButtonText: 'ตกลง'
                     });
@@ -247,7 +246,7 @@
 
             let imageUrl = document.getElementById('edit-imageUrl').value;
 
-            // แสดงผลการโหลด
+            // แสดงผลการโหลดด้วย SweetAlert2
             Swal.fire({
                 title: 'Saving data...',
                 text: 'Please wait while we save your data.',
