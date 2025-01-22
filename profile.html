@@ -141,7 +141,7 @@
         }
 
         async function searchDataByUserlineId(userlineId) {
-            showLoading(); // แสดงแอนิเมชันโหลด
+            showLoading(); // แสดงแอนิเมชันโหลดเฉพาะในฟังก์ชันนี้
             try {
                 const response = await fetch(WEB_APP_URL);
                 const data = await response.json();
@@ -185,7 +185,6 @@
 
         // เริ่มต้นด้วยการล็อกฟอร์มและซ่อนปุ่ม
         window.onload = async () => {
-            showLoading(); // แสดงแอนิเมชันโหลดเมื่อเริ่มต้น
             try {
                 await initializeLiff();
                 await getUserProfile(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
@@ -193,7 +192,6 @@
                 console.error('Initialization error:', error);
             } finally {
                 toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
-                hideLoading(); // ซ่อนแอนิเมชันโหลดเมื่อเริ่มต้นเสร็จสิ้น
             }
         };
 
@@ -235,7 +233,9 @@
 
         document.getElementById('edit-form').addEventListener('submit', async function (e) {
             e.preventDefault();
-            showLoading(); // แสดงแอนิเมชันโหลดเมื่อเริ่มบันทึก
+
+            // ไม่แสดงแอนิเมชันโหลดในฟังก์ชันนี้
+            // แต่ยังคงใช้ SweetAlert2 เพื่อแสดงการบันทึกข้อมูล
 
             const id = document.getElementById('edit-id').value;
             const userID = document.getElementById('edit-userID').value;
@@ -287,7 +287,7 @@
                     confirmButtonText: 'ตกลง'
                 });
             } finally {
-                hideLoading(); // ซ่อนแอนิเมชันโหลดหลังจากบันทึกเสร็จ
+                // ซ่อนแอนิเมชันโหลดไม่ได้ เนื่องจากไม่ได้แสดงตอนบันทึก
                 cancelEdit();
             }
         });
