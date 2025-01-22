@@ -143,23 +143,21 @@
         async function searchDataByUserlineId(userlineId) {
             showLoading(); // แสดงแอนิเมชันโหลดเฉพาะในฟังก์ชันนี้
             try {
-                const response = await fetch(WEB_APP_URL);
+                // ส่ง userlineId เป็นพารามิเตอร์ในการค้นหา
+                const response = await fetch(`${WEB_APP_URL}?method=getUserData&userlineId=${encodeURIComponent(userlineId)}`);
                 const data = await response.json();
 
-                // ค้นหาข้อมูลที่ตรงกับ userlineId
-                const filteredData = data.filter(row => row[1] === userlineId);
-
-                if (filteredData.length > 0) {
+                if (Array.isArray(data) && data.length > 0) {
                     // ใช้ข้อมูลจากแถวสุดท้ายที่พบ
-                    latestData = filteredData[filteredData.length - 1];
+                    latestData = data[data.length - 1];
 
                     // กรอกข้อมูลลงในฟอร์ม
-                    document.getElementById('edit-id').value = latestData[0];
-                    document.getElementById('edit-userID').value = latestData[1];
-                    document.getElementById('edit-name').value = latestData[2];
-                    document.getElementById('edit-employeeID').value = latestData[3];
-                    document.getElementById('edit-department').value = latestData[4];
-                    document.getElementById('edit-imageUrl').value = latestData[5];
+                    document.getElementById('edit-id').value = latestData.keyid;
+                    document.getElementById('edit-userID').value = latestData.userlineId;
+                    document.getElementById('edit-name').value = latestData.nameId;
+                    document.getElementById('edit-employeeID').value = latestData.keynumberId;
+                    document.getElementById('edit-department').value = latestData.keynumber2Id;
+                    document.getElementById('edit-imageUrl').value = latestData.fileLink;
 
                     updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
                 } else {
@@ -295,12 +293,12 @@
         // ฟังก์ชันยกเลิกการแก้ไขและรีเซ็ตฟอร์ม
         function cancelEdit() {
             document.getElementById('edit-form').reset();
-            document.getElementById('edit-id').value = latestData[0];
-            document.getElementById('edit-userID').value = latestData[1];
-            document.getElementById('edit-name').value = latestData[2];
-            document.getElementById('edit-employeeID').value = latestData[3];
-            document.getElementById('edit-department').value = latestData[4];
-            document.getElementById('edit-imageUrl').value = latestData[5];
+            document.getElementById('edit-id').value = latestData.keyid || '';
+            document.getElementById('edit-userID').value = latestData.userlineId || '';
+            document.getElementById('edit-name').value = latestData.nameId || '';
+            document.getElementById('edit-employeeID').value = latestData.keynumberId || '';
+            document.getElementById('edit-department').value = latestData.keynumber2Id || '';
+            document.getElementById('edit-imageUrl').value = latestData.fileLink || '';
 
             updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
             toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
@@ -312,7 +310,7 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
+                body: `method=updateData&id=${encodeURIComponent(id)}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
             });
             const result = await response.text();
 
