@@ -11,30 +11,27 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Lottie Player สำหรับแอนิเมชันโหลด -->
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
-<body class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen relative">
+<body class="bg-white flex justify-center items-center max-w-sm mx-auto min-h-screen relative">
 
-    <!-- แอนิเมชันโหลด -->
-    <div id="loading" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 hidden">
-        <lottie-player
-            src="https://assets2.lottiefiles.com/packages/lf20_t24tpvcu.json"
-            background="transparent"
-            speed="1"
-            style="width: 150px; height: 150px;"
-            loop
-            autoplay>
-        </lottie-player>
+    <!-- แก้ไขโหลดิ้งเป็นแบบใหม่ -->
+    <div id="loading-overlay" class="fixed inset-0 bg-gray-200 bg-opacity-80 flex items-center justify-center z-50 hidden">
+        <div class="flex flex-col items-center">
+            <svg class="animate-spin h-12 w-12 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+            <span class="text-blue-500 text-lg">กำลังโหลด...</span>
+        </div>
     </div>
 
     <!-- เนื้อหาหลักของหน้าเว็บ -->
-    <div class="max-w-sm w-full p-6 rounded-xl text-white ">
+    <div class="max-w-sm w-full p-6 rounded-xl bg-gray-100 shadow-lg text-gray-800">
         <div class="flex justify-between items-center mb-4">
             <div>
-                <p class="text-gray-100 text-xs">Welcome back</p>
-                <input type="text" class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0 "
+                <p class="text-gray-600 text-xs">Welcome back</p>
+                <input type="text" class="input-field bg-white text-gray-800 text-xl font-bold border border-gray-300 rounded-md p-2"
                     id="displayName" name="displayName" readonly>
             </div>
             <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
@@ -42,9 +39,9 @@
                     alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
             </div>
         </div>
-        <div class="flex items-center border border-teal-400 p-1 space-x-2 rounded-md mb-4">
+        <div class="flex items-center border border-blue-400 p-1 space-x-2 rounded-md mb-4">
             <input type="text"
-                class="input-field bg-gray-50 w-full text-center text-teal-400 text-xs font-bold bg-opacity-0 "
+                class="input-field bg-white w-full text-center text-blue-400 text-xs font-bold border border-blue-300 rounded-md p-2"
                 id="userId" placeholder="Line ID" name="userId" readonly>
         </div>
 
@@ -71,24 +68,24 @@
                 <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded" disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-name" class="block text-xs text-teal-400">ชื่อ สกุล</label>
-                <input type="text" id="edit-name" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
+                <label for="edit-name" class="block text-xs text-blue-500">ชื่อ สกุล</label>
+                <input type="text" id="edit-name" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-employeeID" class="block text-xs text-teal-400">เบอร์ติดต่อ</label>
-                <input type="text" id="edit-employeeID" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
+                <label for="edit-employeeID" class="block text-xs text-blue-500">เบอร์ติดต่อ</label>
+                <input type="text" id="edit-employeeID" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-department" class="block text-xs text-teal-400">เพิ่มเติม..</label>
-                <input type="text" id="edit-department" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
+                <label for="edit-department" class="block text-xs text-blue-500">เพิ่มเติม..</label>
+                <input type="text" id="edit-department" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
             </div>
             <div class="flex justify-start">
                 <button type="button" id="edit-button"
-                    class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700">แก้ไข</button>
-                <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2 hidden"
+                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700">แก้ไข</button>
+                <button type="button" class="bg-gray-500 text-white py-1 px-3 rounded hover:bg-gray-700 mr-2 hidden"
                     onclick="cancelEdit()">ยกเลิก</button>
                 <button type="submit"
-                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 hidden">บันทึก</button>
+                    class="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-700 hidden">บันทึก</button>
             </div>
         </form>
     </div>
@@ -132,12 +129,12 @@
 
         // ฟังก์ชันเพื่อแสดงแอนิเมชันโหลด
         function showLoading() {
-            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('loading-overlay').classList.remove('hidden');
         }
 
         // ฟังก์ชันเพื่อซ่อนแอนิเมชันโหลด
         function hideLoading() {
-            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('loading-overlay').classList.add('hidden');
         }
 
         async function searchDataByUserlineId(userlineId) {
