@@ -18,11 +18,11 @@
     <!-- แก้ไขโหลดิ้งเป็นแบบใหม่ -->
     <div id="loading-overlay" class="fixed inset-0 bg-gray-200 bg-opacity-80 flex items-center justify-center z-50 hidden">
         <div class="flex flex-col items-center">
-            <svg class="animate-spin h-12 w-12 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin h-12 w-12 text-teal-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
             </svg>
-            <span class="text-blue-500 text-lg">กำลังโหลด...</span>
+            <span class="text-teal-500 text-lg">กำลังโหลด...</span>
         </div>
     </div>
 
@@ -39,9 +39,9 @@
                     alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
             </div>
         </div>
-        <div class="flex items-center border border-blue-400 p-1 space-x-2 rounded-md mb-4">
+        <div class="flex items-center border border-teal-400 p-1 space-x-2 rounded-md mb-4">
             <input type="text"
-                class="input-field bg-white w-full text-center text-blue-400 text-xs font-bold border border-blue-300 rounded-md p-2"
+                class="input-field bg-white w-full text-center text-teal-400 text-xs font-bold border border-teal-300 rounded-md p-2"
                 id="userId" placeholder="Line ID" name="userId" readonly>
         </div>
 
@@ -68,20 +68,20 @@
                 <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded" disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-name" class="block text-xs text-blue-500">ชื่อ สกุล</label>
+                <label for="edit-name" class="block text-xs text-teal-500">ชื่อ สกุล</label>
                 <input type="text" id="edit-name" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-employeeID" class="block text-xs text-blue-500">เบอร์ติดต่อ</label>
+                <label for="edit-employeeID" class="block text-xs text-teal-500">เบอร์ติดต่อ</label>
                 <input type="text" id="edit-employeeID" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-department" class="block text-xs text-blue-500">เพิ่มเติม..</label>
+                <label for="edit-department" class="block text-xs text-teal-500">เพิ่มเติม..</label>
                 <input type="text" id="edit-department" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
             </div>
             <div class="flex justify-start">
                 <button type="button" id="edit-button"
-                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700">แก้ไข</button>
+                    class="bg-teal-500 text-white py-1 px-3 rounded hover:bg-teal-700">แก้ไข</button>
                 <button type="button" class="bg-gray-500 text-white py-1 px-3 rounded hover:bg-gray-700 mr-2 hidden"
                     onclick="cancelEdit()">ยกเลิก</button>
                 <button type="submit"
@@ -243,8 +243,8 @@
 
             // แสดงผลการโหลดด้วย SweetAlert2
             Swal.fire({
-                title: 'Saving data...',
-                text: 'Please wait while we save your data.',
+                title: 'กำลังบันทึกข้อมูล...',
+                text: 'กรุณารอขณะบันทึกข้อมูลของคุณ',
                 allowOutsideClick: false,
                 didOpen: () => {
                     Swal.showLoading(); // แสดง spinner
@@ -270,7 +270,7 @@
                     });
                     await initializeLiff(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
                 } else {
-                    throw new Error(result || 'Failed to save data');
+                    throw new Error(result || 'ไม่สามารถบันทึกข้อมูลได้');
                 }
 
             } catch (error) {
