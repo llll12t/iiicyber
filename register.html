@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,78 +8,68 @@
     <title>ลงทะเบียน</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <style>
-        /* เพิ่มการเปลี่ยนแปลงสำหรับ Transition เมื่อสลับธีม */
-        .transition-colors {
-            transition: background-color 0.3s, color 0.3s;
-        }
-    </style>
 </head>
 
-<body class="transition-colors bg-gradient-to-r from-gray-100 to-gray-200 dark:from-slate-900 dark:to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen">
-    <div class="w-full p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+<body class="bg-gradient-to-r from-white to-gray-100 flex justify-center items-center max-w-sm mx-auto min-h-screen">
+    <div class="w-full p-6 bg-white rounded-lg shadow-md">
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <div>
-                <p class="text-gray-900 dark:text-gray-100 text-xs">Welcome back</p>
-                <input type="text" class="input-field bg-gray-100 dark:bg-slate-900 text-gray-900 dark:text-white text-xl font-bold bg-opacity-0"
+                <p class="text-gray-700 text-xs">Welcome back</p>
+                <input type="text" class="input-field bg-white text-gray-800 text-xl font-bold"
                     id="displayName" name="displayName" readonly>
             </div>
-            <div class="flex items-center space-x-4">
-                <button id="themeToggle" class="focus:outline-none">
-                    <!-- ไอคอนสำหรับ Light Mode -->
-                    <svg id="themeLightIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-11h-1M4.34 12h-1m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 000 14 7 7 0 000-14z" />
-                    </svg>
-                    <!-- ไอคอนสำหรับ Dark Mode -->
-                    <svg id="themeDarkIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                    </svg>
-                </button>
-                <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
-                    <img src="" alt="Profile Image" id="profileImage"
-                        class="w-10 h-10 bg-white rounded-lg shadow-lg">
-                </div>
+            <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner bg-gray-200">
+                <img src="" alt="Profile Image" id="profileImage"
+                    class="w-10 h-10 rounded-lg shadow-lg">
             </div>
         </div>
 
         <form>
             <div class="flex items-center space-x-2 mb-4">
                 <input type="text"
-                    class="input-field w-full bg-gray-100 dark:bg-gray-700 p-2 text-center text-xs text-teal-400 rounded-md"
+                    class="input-field w-full bg-gray-200 p-2 text-center text-xs text-teal-600 rounded-md"
                     id="userlineId" placeholder="lineId" name="userlineId">
             </div>
             <div class="flex justify-center">
+
                 <div class="mb-5 text-center">
-                    <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 dark:bg-gray-700 shadow-inset">
+                    <div class="mx-auto w-16 h-16 rounded-lg bg-gray-100 shadow-inner">
                         <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                             alt="Default Image" id="preview" class="h-16 w-16 object-cover rounded-md">
                     </div>
                 </div>
                 <div class="mb-5 text-center">
+
                     <label for="file"
-                        class="cursor-pointer inline-flex justify-between items-center py-2 px-4 rounded-lg shadow-sm text-left text-gray-500 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 hover:text-gray-600">
+                        class="cursor-pointer inline-flex justify-between items-center py-2 px-4 rounded-lg shadow-sm text-left text-gray-700 bg-gray-300 hover:bg-gray-400">
                         <img src="https://img.icons8.com/?size=100&id=748&format=png&color=000000" class="w-6 h-6 mx-1">
                         อัพโหลดรูป
                         <input type="file" id="file" name="file" accept="image/*" class="hidden">
                     </label>
-                    <div class="mx-auto w-48 text-gray-500 dark:text-gray-300 text-xs text-center mt-1">คลิกเพื่ออัพโหลดรูปของคุณ</div>
+                    <div class="mx-auto w-48 text-gray-600 text-xs text-center mt-1">คลิกเพื่ออัพโหลดรูปของคุณ</div>
                 </div>
             </div>
             <div class="flex items-center space-x-2 mb-4">
-                <input type="text" class="input-field w-full bg-gray-100 dark:bg-gray-700 p-2 text-md text-gray-900 dark:text-gray-100 rounded-md" id="nameId"
+
+                <input type="text" class="input-field w-full bg-gray-200 p-2 text-md text-gray-800 rounded-md" id="nameId"
                     placeholder="ชื่อ-สกุล" name="nameId" required>
             </div>
             <div class="flex items-center space-x-2 mb-4">
-                <input type="text" class="input-field w-full bg-gray-100 dark:bg-gray-700 p-2 text-md text-gray-900 dark:text-gray-100 rounded-md"
+
+                <input type="text" class="input-field w-full bg-gray-200 p-2 text-md text-gray-800 rounded-md"
                     id="keynumberId" placeholder="เบอร์ติดต่อ" name="keynumberId" required>
             </div>
             <div class="flex items-center space-x-2 mb-6">
-                <input type="text" class="input-field w-full bg-gray-100 dark:bg-gray-700 p-2 text-md text-gray-900 dark:text-gray-100 rounded-md"
+
+                <input type="text" class="input-field w-full bg-gray-200 p-2 text-md text-gray-800 rounded-md"
                     id="keynumber2Id" placeholder="เพิ่มเติม" name="keynumber2Id" required>
             </div>
-            <button type="button" id="submitBtn" class="bg-teal-400 text-center w-full text-teal-900 p-4 rounded-md shadow-md hover:bg-teal-600 dark:bg-teal-600 dark:text-teal-100 dark:hover:bg-teal-700">บันทึกข้อมูล</button>
-        </form>
+            <button type="button" id="submitBtn"
+                class="bg-teal-500 text-center w-full text-white p-4 rounded-md shadow-md hover:bg-teal-600">บันทึกข้อมูล</button>
+    </div>
+    </form>
+    </div>
     </div>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
@@ -91,7 +82,6 @@
         // ฟังก์ชันเริ่มต้น LIFF SDK
         window.onload = function () {
             initializeLiff();
-            initializeTheme();
         };
 
         // ฟังก์ชันสำหรับเริ่มต้น LIFF SDK
@@ -112,6 +102,7 @@
                 document.getElementById('userlineId').value = profile.userId;
                 document.getElementById('displayName').value = profile.displayName;
                 document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
+
             } catch (error) {
                 console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
             }
@@ -126,10 +117,10 @@
                     type: 'bubble',
                     styles: {
                         header: {
-                            backgroundColor: '#262A35'
+                            backgroundColor: '#E5E7EB'
                         },
                         footer: {
-                            backgroundColor: '#194E44'
+                            backgroundColor: '#D1FAE5'
                         },
                         body: {
                             backgroundColor: '#ffffff'
@@ -144,7 +135,7 @@
                                 text: 'ข้อมูลลงทะเบียนสำเร็จ',
                                 weight: 'bold',
                                 size: 'lg',
-                                color: '#FFFFFF',
+                                color: '#111827',
                                 align: 'center'
                             }
                         ]
@@ -167,14 +158,14 @@
                                                 type: 'text',
                                                 text: 'ชื่อ-สกุล',
                                                 size: 'sm',
-                                                color: '#555555',
+                                                color: '#6B7280',
                                                 flex: 1
                                             },
                                             {
                                                 type: 'text',
                                                 text: document.getElementById('nameId').value,
                                                 size: 'sm',
-                                                color: '#111111',
+                                                color: '#111827',
                                                 align: 'end',
                                                 flex: 2
                                             }
@@ -188,14 +179,14 @@
                                                 type: 'text',
                                                 text: 'เบอร์ติดต่อ',
                                                 size: 'sm',
-                                                color: '#555555',
+                                                color: '#6B7280',
                                                 flex: 1
                                             },
                                             {
                                                 type: 'text',
                                                 text: document.getElementById('keynumberId').value,
                                                 size: 'sm',
-                                                color: '#111111',
+                                                color: '#111827',
                                                 align: 'end',
                                                 flex: 2
                                             }
@@ -209,14 +200,14 @@
                                                 type: 'text',
                                                 text: 'อีเมล',
                                                 size: 'sm',
-                                                color: '#555555',
+                                                color: '#6B7280',
                                                 flex: 1
                                             },
                                             {
                                                 type: 'text',
                                                 text: document.getElementById('keynumber2Id').value,
                                                 size: 'sm',
-                                                color: '#111111',
+                                                color: '#111827',
                                                 align: 'end',
                                                 flex: 2
                                             }
@@ -234,7 +225,7 @@
                                 type: 'text',
                                 text: 'รับพ้อย 10 ทันที!',
                                 size: 'sm',
-                                color: '#FFD454',
+                                color: '#10B981',
                                 align: 'center'
                             }
                         ]
@@ -408,38 +399,7 @@
 
             return confirmation.isConfirmed;
         }
-
-        // ฟังก์ชันสำหรับสลับธีม
-        function initializeTheme() {
-            const themeToggle = document.getElementById('themeToggle');
-            const lightIcon = document.getElementById('themeLightIcon');
-            const darkIcon = document.getElementById('themeDarkIcon');
-
-            // โหลดธีมที่เก็บไว้ใน localStorage
-            const storedTheme = localStorage.getItem('theme');
-            if (storedTheme === 'dark') {
-                document.documentElement.classList.add('dark');
-                lightIcon.classList.add('hidden');
-                darkIcon.classList.remove('hidden');
-            } else {
-                document.documentElement.classList.remove('dark');
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
-            }
-
-            themeToggle.addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark');
-                if (document.documentElement.classList.contains('dark')) {
-                    localStorage.setItem('theme', 'dark');
-                    lightIcon.classList.add('hidden');
-                    darkIcon.classList.remove('hidden');
-                } else {
-                    localStorage.setItem('theme', 'light');
-                    lightIcon.classList.remove('hidden');
-                    darkIcon.classList.add('hidden');
-                }
-            });
-        }
     </script>
 </body>
+
 </html>
