@@ -1,321 +1,447 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> 
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ข้อมูลส่วนตัว</title>
+    <title>แก้ไขโปรไฟล์</title>
+    <!-- นำเข้า Tailwind CSS สำหรับการออกแบบ -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-
-    <style>
-        #loadingOverlay {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.26);
-            border-radius: 15px;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .loading-container {
-            position: relative;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        .blink {
-            animation: blink 1s infinite;
-        }
-    </style>
-
+    <!-- นำเข้า jQuery สำหรับการทำงานร่วมกับ DOM -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- นำเข้า SweetAlert2 สำหรับการแสดงการแจ้งเตือน -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body
-    class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen">
-    <div class="w-full mx-auto p-4 mt-4">
-        <div class="loading-container">
-            <div id="loadingOverlay">
-                <div class="text-center text-white">ค้นหารายชื่อ..</div>
-            </div>
-            <div class="flex justify-center items-center">
-                <div class="p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <p class="text-gray-100 text-xs">Welcome back</p>
-                            <input type="text"
-                                class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0 "
-                                id="displayName" name="displayName" readonly>
-                        </div>
-                        <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                                alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
-                        </div>
-                    </div>
-                    <div class="bg-teal-400 text-white p-4 rounded-lg mb-6 shadow-md">
-                        <div class="flex justify-between">
-                            <div>
-                                <p class="text-black text-xs font-bold">POINT</p>
-                                <p class="text-sm font-bold">RANK A</p>
-                            </div>
-                            <div>
-                                  <input type="text"
-                                class="input-field w-16 bg-slate-900 text-white text-3xl text-teal-900 text-right font-bold bg-opacity-0 "
-                                id="columnGData" name="columnGData" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center border border-teal-400 p-1 space-x-2 rounded-md mb-4">
-                        <input type="text"
-                            class="input-field bg-gray-50 w-full text-center text-teal-400 text-xs font-bold bg-opacity-0 "
-                            id="columnBData" placeholder="Line ID" name="columnBData" readonly>
-                    </div>
-                    <div class="mb-5 text-center">
-                        <div class="w-16 h-16 rounded-lg bg-gray-100 shadow-inset">
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                                alt="Default Image" id="columnEData" class="h-16 w-16 object-cover rounded-md">
-                        </div>
-                    </div>
-
-                    <!-- Existing fields for name, contact number, and birthday -->
-                    <div class="flex items-center space-x-2 mb-4">
-                        <p class="text-gray-300 text-md">ชื่อ-สกุล : </p>
-                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
-                            id="columnCData" placeholder="ชื่อ-สกุล" name="columnCData" readonly>
-                    </div>
-
-                    <div class="flex items-center space-x-2 mb-4">
-                        <p class="text-gray-300 text-md">เบอร์ติดต่อ : </p>
-                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
-                            id="columnDData" placeholder="เบอร์ติดต่อ" name="columnDData" readonly>
-                    </div>
-
-                    <div class="flex items-center space-x-2 mb-4">
-                        <p class="text-gray-300 text-md">เมล : </p>
-                        <input type="text" class="input-field text-md bg-white text-gray-300 bg-opacity-0 "
-                            id="columnXData" placeholder="เมล" name="columnXData" readonly>
-                    </div>
-
-                    <!-- Edit and Save Buttons -->
-                    <div class="flex space-x-4">
-                        <button id="editBtn" class="bg-yellow-500 font-bold text-black px-4 py-1 rounded-md">แก้ไข</button>
-                        <button id="saveBtn" class="bg-teal-400 font-bold text-black px-4 py-1 rounded-md" style="display:none;">บันทึก</button>
-                    </div>
-
-                </div>
-                <input type="hidden" id="userId" name="userId">
-                <input type="hidden" id="columnAData" name="columnAData">
-            </div>
-
+<body class="bg-gray-100 p-6">
+    <div class="container mx-auto">
+        <!-- ตารางแสดงข้อมูลที่ดึงจาก Google Sheets -->
+        <table id="data-table" class="min-w-full text-xs bg-white rounded shadow">
+            <thead>
+                <tr class="text-slate-800 text-sm mt-4">
+                    <th class="py-2 px-4 border-b w-16">รูปภาพ</th>
+                    <th class="py-2 px-4 text-left border-b w-48">ชื่อ</th>
+                    <th class="py-2 px-4 text-center border-b">คำสั่ง</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm">
+                <!-- ข้อมูลจะถูกเพิ่มที่นี่โดย JavaScript -->
+            </tbody>
+        </table>
+        <div id="pagination" class="mt-4 flex justify-center space-x-2">
+            <!-- ปุ่มเปลี่ยนหน้า Pagination จะถูกเพิ่มที่นี่ -->
         </div>
     </div>
+
+    <!-- สปินเนอร์โหลด -->
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="flex flex-col items-center">
+            <svg class="animate-spin h-12 w-12 text-white mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+            <span class="text-white text-lg">กำลังโหลด...</span>
+        </div>
+    </div>
+
+    <!-- โมดอลสำหรับแก้ไขข้อมูล -->
+    <div id="edit-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg w-2/3 max-w-4xl">
+            <h2 class="text-2xl mb-6">แก้ไขข้อมูลพนักงาน</h2>
+            <form id="edit-form">
+                <!-- ฟิลด์ซ่อนสำหรับเก็บ ID -->
+                <input type="hidden" id="edit-id">
+
+                <!-- กริดสองคอลัมน์ -->
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- คอลัมน์ซ้าย -->
+                    <div>
+                        <label for="edit-userID" class="block text-sm font-medium text-gray-700">UserID</label>
+                        <input type="text" id="edit-userID" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" disabled>
+                    </div>
+
+                    <div>
+                        <label for="edit-name" class="block text-sm font-medium text-gray-700">ชื่อพนักงาน</label>
+                        <input type="text" id="edit-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
+
+                    <div>
+                        <label for="edit-employeeID" class="block text-sm font-medium text-gray-700">รหัสพนักงาน</label>
+                        <input type="text" id="edit-employeeID" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
+
+                    <div>
+                        <label for="edit-department" class="block text-sm font-medium text-gray-700">แผนก</label>
+                        <input type="text" id="edit-department" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
+
+                    <div class="col-span-2">
+                        <label for="edit-imageUrl" class="block text-sm font-medium text-gray-700">URL รูปภาพ</label>
+                        <input type="text" id="edit-imageUrl" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
+
+                    <div class="col-span-2">
+                        <label for="edit-image" class="block text-sm font-medium text-gray-700">อัปโหลดรูปภาพ</label>
+                        <input type="file" id="edit-image" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-6">
+                    <!-- ปุ่มยกเลิกการแก้ไข -->
+                    <button type="button" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 mr-3" onclick="closeModal()">ยกเลิก</button>
+                    <!-- ปุ่มบันทึกการแก้ไข -->
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- โมดอลสำหรับแสดงรายละเอียดทั้งหมด -->
+    <div id="detail-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg w-2/3 max-w-4xl">
+            <h2 class="text-2xl mb-6">รายละเอียดพนักงาน</h2>
+            <div>
+                <!-- แสดงรายละเอียดทั้งหมดของพนักงาน -->
+                <img id="detail-image" class="h-20 w-20 object-cover mb-4" src="" alt="รูปภาพพนักงาน">
+                <p><strong>ชื่อพนักงาน:</strong> <span id="detail-name"></span></p>
+                <p><strong>รหัสพนักงาน:</strong> <span id="detail-employeeID"></span></p>
+                <p><strong>แผนก:</strong> <span id="detail-department"></span></p>
+                <p><strong>UserID:</strong> <span id="detail-userID"></span></p>
+                <!-- เพิ่มข้อมูลเพิ่มเติมที่ต้องการแสดง -->
+            </div>
+            <div class="flex justify-end mt-6">
+                <!-- ปุ่มปิดโมดอล -->
+                <button type="button" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" onclick="closeDetailModal()">ปิด</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0eHPtQ5rRIkj28JjR3ukh9m9gwyTUHQi4DyLRl9EIMRVusiHb7yp77KXuFFqBumfz-A/exec';
-        const DEFAULT_IMAGE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-        const LIFF_ID = '2005629952-Zeqeklp9'; // Liff ID
+        // URL ของ Web App ที่ใช้สำหรับดึงข้อมูลจาก Google Sheets
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxh6MnlWyyyk_zlppsPv8acuyckmCppUaFHuSbEGV2uCU3pHW-dYIpvWVAn12QuyHEW/exec';
 
-        window.onload = async function () {
-              await initializeLiff();
-        };
+        const rowsPerPage = 10; // จำนวนแถวต่อหน้า
+        let currentPage = 1; // หน้าปัจจุบัน
+        let tableData = []; // ข้อมูลทั้งหมด
 
-        async function initializeLiff() {
+        // ฟังก์ชันดึงข้อมูลจาก Google Sheets
+        async function fetchData() {
+            showLoading(); // แสดงสปินเนอร์โหลด
             try {
-                await liff.init({ liffId: `${LIFF_ID}` }); // Replace with your LIFF ID
-                if (liff.isLoggedIn()) {
-                    getUserProfile();
-                } else {
-                    liff.login();
+                const response = await fetch(WEB_APP_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            } catch (error) {
-                console.error('Error initializing LIFF:', error);
-            }
-        }
-
-        async function getUserProfile() {
-            try {
-                const profile = await liff.getProfile();
-                const userId = profile.userId;
-                document.getElementById('userId').value = userId;
-                document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
-                await fetchData(userId);
-            } catch (error) {
-                console.error('Error getting profile data:', error);
-            }
-        }
-
-        async function fetchData(userId) {
-            showLoading(true);
-            try {
-                const response = await fetch(`${WEB_APP_URL}`, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'fetchData', userId: userId })
-                });
                 const data = await response.json();
-                data.sort((a, b) => new Date(b[6]) - new Date(a[6]));
-                const row = data.find(row => row[1] === userId);
-                if (row) {
-                    displayData(row);
-                } else {
-                    console.log('No data found for userId:', userId);
-                }
+                tableData = data.slice(1); // ลบแถวหัวข้อ
+                displayPage(currentPage); // แสดงข้อมูลตามหน้าที่เลือก
+                setupPagination(); // สร้างปุ่ม pagination
             } catch (error) {
                 console.error('Error fetching data:', error);
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        function displayData(row) {
-            document.getElementById('columnAData').value = row[0] || '';
-            document.getElementById('columnBData').value = row[1] || '';
-            document.getElementById('columnCData').value = row[2] || '';
-            document.getElementById('columnDData').value = row[3] || '';
-            document.getElementById('columnXData').value = row[4] || '';
-            document.getElementById('columnEData').src = row[5] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-            document.getElementById('columnGData').value = row[6] || '';
-            document.getElementById('columnHData').value = row[7] || '';
-            document.getElementById('columnIData').value = row[8] || '';
-        }
-
-        function showLoading(isLoading) {
-            const overlay = document.getElementById('loadingOverlay');
-            const inputs = document.querySelectorAll('.input-field');
-            if (isLoading) {
-                overlay.style.display = 'flex';
-                inputs.forEach(input => input.disabled = true);
-            } else {
-                overlay.style.display = 'none';
-                inputs.forEach(input => input.disabled = false);
-            }
-        }
-
-        // Existing constants and window.onload function...
-
-        document.getElementById('editBtn').addEventListener('click', function () {
-            enableEditing(true);
-        });
-
-        document.getElementById('saveBtn').addEventListener('click', function () {
-            saveProfileData();
-        });
-
-        function enableEditing(isEditing) {
-            const inputs = document.querySelectorAll('.input-field');
-            inputs.forEach(input => input.readOnly = !isEditing);
-
-            document.getElementById('editBtn').style.display = isEditing ? 'none' : 'inline-block';
-            document.getElementById('saveBtn').style.display = isEditing ? 'inline-block' : 'none';
-        }
-
-        async function saveProfileData() {
-            try {
-                const data = {
-                    action: 'updateData',
-                    userId: document.getElementById('userId').value,
-                    columnA: document.getElementById('columnAData').value,
-                    columnB: document.getElementById('columnBData').value,
-                    columnC: document.getElementById('columnCData').value,
-                    columnD: document.getElementById('columnDData').value,
-                    columnX: document.getElementById('columnXData').value
-                };
-
-                const response = await fetch(`${WEB_APP_URL}`, {
-                    method: 'POST',
-                    body: JSON.stringify(data)
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถดึงข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง'
                 });
+            } finally {
+                hideLoading(); // ซ่อนสปินเนอร์โหลด
+            }
+        }
 
+        // ฟังก์ชันแสดงข้อมูลตามหน้าที่เลือก
+        function displayPage(page) {
+            const startIndex = (page - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            const paginatedData = tableData.slice(startIndex, endIndex);
+
+            const tableBody = document.querySelector('#data-table tbody');
+            tableBody.innerHTML = ''; // ลบข้อมูลที่มีอยู่
+
+            paginatedData.forEach(row => {
+                if (row.every(cell => cell === '')) return; // ข้ามแถวที่ว่างเปล่า
+
+                const tr = document.createElement('tr');
+
+                // รูปภาพ
+                const imgTd = document.createElement('td');
+                if (row[5]) {
+                    const img = document.createElement('img');
+                    img.src = row[5];
+                    img.className = 'h-10 w-10 object-cover';
+                    img.alt = 'รูปภาพพนักงาน';
+                    imgTd.appendChild(img);
+                } else {
+                    imgTd.textContent = 'ไม่มีรูป';
+                }
+                imgTd.className = 'py-2 px-4 border-b';
+                tr.appendChild(imgTd);
+
+                // ชื่อพนักงาน
+                const nameTd = document.createElement('td');
+                nameTd.textContent = row[2];
+                nameTd.className = 'py-2 px-4 border-b';
+                tr.appendChild(nameTd);
+
+                // Action buttons
+                const actionTd = document.createElement('td');
+                actionTd.className = 'py-3 px-4 border-b justify-center flex space-x-2';
+                
+                // ปุ่มแสดงข้อมูลทั้งหมด
+                const detailButton = document.createElement('button');
+                detailButton.textContent = 'ข้อมูล';
+                detailButton.className = 'bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700';
+                detailButton.onclick = () => openDetailModal(row);
+                
+                // ปุ่มแก้ไข
+                const editButton = document.createElement('button');
+                editButton.textContent = 'แก้ไข';
+                editButton.className = 'bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-700';
+                editButton.onclick = () => openEditModal(row);
+
+                // ปุ่มลบ
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'ลบ';
+                deleteButton.className = 'bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700';
+                deleteButton.onclick = () => confirmDelete(row[0]);
+
+              
+
+                actionTd.appendChild(editButton);
+                actionTd.appendChild(deleteButton);
+                actionTd.appendChild(detailButton);
+                tr.appendChild(actionTd);
+
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // ฟังก์ชันสร้างปุ่ม pagination
+        function setupPagination() {
+            const pageCount = Math.ceil(tableData.length / rowsPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= pageCount; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.className = `py-2 px-4 rounded-2xl ${i === currentPage ? 'bg-slate-500 text-white' : 'bg-gray-300 text-slate-800'}`;
+                pageButton.onclick = () => {
+                    currentPage = i;
+                    displayPage(currentPage);
+                    updatePaginationButtons();
+                };
+                pagination.appendChild(pageButton);
+            }
+        }
+
+        // ฟังก์ชันอัปเดตสีของปุ่ม pagination ตามหน้าที่เลือก
+        function updatePaginationButtons() {
+            const pagination = document.getElementById('pagination');
+            const buttons = pagination.querySelectorAll('button');
+
+            buttons.forEach((button, index) => {
+                if (index + 1 === currentPage) {
+                    button.className = 'py-2 px-4 rounded-2xl bg-slate-500 text-white';
+                } else {
+                    button.className = 'py-2 px-4 rounded-2xl bg-gray-300 text-slate-800';
+                }
+            });
+        }
+
+        // ฟังก์ชันอัปเดตข้อมูลใน Google Sheets
+        async function updateData(id, userID, name, employeeID, department, base64Image) {
+            // แสดง SweetAlert2 แบบ Loading
+            Swal.fire({
+                title: 'กำลังอัพเดท',
+                text: 'โปรดรอสักครู่...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
+                });
                 const result = await response.text();
 
-                if (result === "Data updated successfully") {
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Profile updated successfully',
-                        icon: 'success'
-                    });
-                } else {
-                    throw new Error('Failed to update data');
-                }
-
-                enableEditing(false);
-            } catch (error) {
-                console.error('Error saving profile data:', error);
+                // ปิด SweetAlert2 แบบ Loading และแสดงข้อความสำเร็จ
                 Swal.fire({
-                    title: 'Error',
-                    text: 'Failed to save profile data. Please try again later.',
-                    icon: 'error'
+                    title: 'สำเร็จ',
+                    text: result,
+                    icon: 'success',
+                    confirmButtonText: 'ตกลง'
+                });
+                fetchData(); // ดึงข้อมูลใหม่หลังจากอัปเดต
+            } catch (error) {
+                console.error('Error updating data:', error);
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถอัปเดทข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง'
                 });
             }
         }
 
-        document.getElementById('profileImageUpload').addEventListener('change', function (event) {
-            const file = event.target.files[0];
-            if (file) {
-                uploadProfileImage(file);
+        // ฟังก์ชันลบข้อมูลใน Google Sheets
+        async function deleteData(id) {
+            // แสดง SweetAlert2 แบบ Loading
+            Swal.fire({
+                title: 'กำลังลบข้อมูล',
+                text: 'โปรดรอสักครู่...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `method=deleteData&id=${id}`
+                });
+                const result = await response.text();
+
+                // ปิด SweetAlert2 แบบ Loading และแสดงข้อความสำเร็จ
+                Swal.fire({
+                    title: 'ลบเรียบร้อย',
+                    text: result,
+                    icon: 'success',
+                    confirmButtonText: 'ตกลง'
+                });
+                fetchData(); // ดึงข้อมูลใหม่หลังจากลบ
+            } catch (error) {
+                console.error('Error deleting data:', error);
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง'
+                });
+            }
+        }
+
+        // ฟังก์ชันเปิดโมดอลสำหรับแก้ไขข้อมูล
+        function openEditModal(row) {
+            document.getElementById('edit-id').value = row[0];
+            document.getElementById('edit-userID').value = row[1];
+            document.getElementById('edit-name').value = row[2];
+            document.getElementById('edit-employeeID').value = row[3];
+            document.getElementById('edit-department').value = row[4];
+            document.getElementById('edit-imageUrl').value = row[5];
+            document.getElementById('edit-image').value = ''; // รีเซ็ตไฟล์อัปโหลด
+            document.getElementById('edit-modal').classList.remove('hidden');
+            document.getElementById('detail-modal').classList.add('hidden'); // ซ่อนโมดอลรายละเอียดถ้ามีการเปิด
+        }
+
+        // ฟังก์ชันปิดโมดอลแก้ไขข้อมูล
+        function closeModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+        }
+
+        // ฟังก์ชันเปิดโมดอลแสดงรายละเอียดทั้งหมด
+        function openDetailModal(row) {
+            document.getElementById('detail-image').src = row[5] || 'https://via.placeholder.com/150'; // ใช้ภาพ placeholder ถ้าไม่มีรูปภาพ
+            document.getElementById('detail-name').textContent = row[2];
+            document.getElementById('detail-employeeID').textContent = row[3];
+            document.getElementById('detail-department').textContent = row[4];
+            document.getElementById('detail-userID').textContent = row[1];
+            // เพิ่มข้อมูลเพิ่มเติมที่ต้องการแสดงในโมดอล
+
+            document.getElementById('edit-modal').classList.add('hidden'); // ซ่อนโมดอลแก้ไขถ้ามีการเปิด
+            document.getElementById('detail-modal').classList.remove('hidden'); // เปิดโมดอลแสดงรายละเอียด
+        }
+
+        // ฟังก์ชันปิดโมดอลแสดงรายละเอียดทั้งหมด
+        function closeDetailModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+
+        // ฟังก์ชันยืนยันการลบข้อมูล
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'คุณแน่ใจหรือไม่?',
+                text: "คุณต้องการลบข้อมูลนี้หรือไม่?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ใช่, ลบเลย!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteData(id);
+                }
+            });
+        }
+
+        // ฟังก์ชันแปลงไฟล์เป็น Base64
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                let reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ฟังก์ชันบันทึกการแก้ไขข้อมูล
+        document.getElementById('edit-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const saveButton = this.querySelector('button[type="submit"]');
+            const originalButtonText = saveButton.textContent;
+
+            // ปิดการใช้งานปุ่มและเปลี่ยนข้อความเป็น "กำลังอัพเดท..."
+            saveButton.disabled = true;
+            saveButton.textContent = 'กำลังอัพเดท...';
+
+            const id = document.getElementById('edit-id').value;
+            const userID = document.getElementById('edit-userID').value;
+            const name = document.getElementById('edit-name').value;
+            const employeeID = document.getElementById('edit-employeeID').value;
+            const department = document.getElementById('edit-department').value;
+            const imageFile = document.getElementById('edit-image').files[0];
+            let imageUrl = document.getElementById('edit-imageUrl').value;
+
+            try {
+                if (imageFile) {
+                    const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
+                    await updateData(id, userID, name, employeeID, department, base64Image);
+                } else {
+                    await updateData(id, userID, name, employeeID, department, imageUrl);
+                }
+            } catch (error) {
+                console.error('Error during update:', error);
+            } finally {
+                // รีเซ็ตปุ่มกลับสู่สถานะปกติ
+                saveButton.disabled = false;
+                saveButton.textContent = originalButtonText;
+                closeModal();
             }
         });
 
-        async function uploadProfileImage(file) {
-            showLoading(true);
-            const reader = new FileReader();
-            reader.onload = async function (e) {
-                const base64 = e.target.result.split(',')[1]; // Extract base64 data from data URL
-                const data = {
-                    action: 'updateImage',
-                    userId: document.getElementById('userId').value,
-                    imageBase64: base64
-                };
-
-                try {
-                    const response = await fetch(`${WEB_APP_URL}`, {
-                        method: 'POST',
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.text();
-
-                    if (result.startsWith('https://')) {
-                        // Success
-                        document.getElementById('profileImage').src = result;
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Profile image updated successfully',
-                            icon: 'success'
-                        });
-                    } else {
-                        throw new Error('Failed to update image');
-                    }
-                } catch (error) {
-                    console.error('Error uploading image:', error);
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Failed to upload image. Please try again later.',
-                        icon: 'error'
-                    });
-                } finally {
-                    showLoading(false);
-                }
-            };
-            reader.readAsDataURL(file);
+        // ฟังก์ชันแสดงสปินเนอร์โหลด
+        function showLoading() {
+            document.getElementById('loading-overlay').classList.remove('hidden');
         }
 
+        // ฟังก์ชันซ่อนสปินเนอร์โหลด
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
 
+        // เรียกใช้ฟังก์ชัน fetchData เมื่อโหลดหน้าเว็บ
+        window.onload = fetchData;
     </script>
 </body>
 
