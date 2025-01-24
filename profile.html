@@ -15,7 +15,7 @@
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
-<body class="bg-gradient-to-r from-white to-gray-100 flex justify-center items-center max-w-sm mx-auto min-h-screen relative">
+<body class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen relative">
 
     <!-- แอนิเมชันโหลด -->
     <div id="loading" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 hidden">
@@ -30,21 +30,21 @@
     </div>
 
     <!-- เนื้อหาหลักของหน้าเว็บ -->
-    <div class="max-w-sm w-full p-6 bg-white rounded-xl shadow-md">
+    <div class="max-w-sm w-full p-6 rounded-xl text-white ">
         <div class="flex justify-between items-center mb-4">
             <div>
-                <p class="text-gray-700 text-xs">Welcome back</p>
-                <input type="text" class="input-field bg-white text-gray-800 text-xl font-bold border border-gray-300 rounded"
+                <p class="text-gray-100 text-xs">Welcome back</p>
+                <input type="text" class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0 "
                     id="displayName" name="displayName" readonly>
             </div>
-            <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner bg-gray-100">
+            <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
                 <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                    alt="Profile Image" id="profileImage" class="w-10 h-10 rounded-lg shadow-lg">
+                    alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
             </div>
         </div>
         <div class="flex items-center border border-teal-400 p-1 space-x-2 rounded-md mb-4">
             <input type="text"
-                class="input-field bg-gray-50 w-full text-center text-teal-600 text-xs font-bold rounded-md"
+                class="input-field bg-gray-50 w-full text-center text-teal-400 text-xs font-bold bg-opacity-0 "
                 id="userId" placeholder="Line ID" name="userId" readonly>
         </div>
 
@@ -53,13 +53,13 @@
             <input type="hidden" id="edit-id">
 
             <div class="mb-4 hidden">
-                <label for="edit-userID" class="block text-sm text-gray-700">UserID</label>
-                <input type="text" id="edit-userID" class="w-full border border-gray-300 px-2 py-1 rounded" disabled>
+                <label for="edit-userID" class="block text-sm">UserID</label>
+                <input type="text" id="edit-userID" class="w-full border px-2 py-1 rounded" disabled>
             </div>
             <div class="flex my-8">
                 <div class="w-48">
-                    <label for="edit-imageUrl" class="block hidden text-sm text-gray-700">URL รูปภาพ</label>
-                    <input type="hidden" id="edit-imageUrl" class="w-full border border-gray-300 px-2 py-1 rounded"
+                    <label for="edit-imageUrl" class="block hidden text-sm">URL รูปภาพ</label>
+                    <input type="hidden" id="edit-imageUrl" class="w-full border px-2 py-1 rounded"
                         oninput="updateImagePreview()" disabled>
                     <img id="image-preview"
                         src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
@@ -67,28 +67,28 @@
                 </div>
             </div>
             <div class="mb-4 hidden" id="image-upload-section">
-                <label for="edit-image" class="block text-sm text-gray-700">อัปโหลดรูปภาพ</label>
-                <input type="file" id="edit-image" class="w-full border border-gray-300 px-2 py-1 rounded" disabled>
+                <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
+                <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded" disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-name" class="block text-xs text-teal-600">ชื่อ สกุล</label>
-                <input type="text" id="edit-name" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded" disabled>
+                <label for="edit-name" class="block text-xs text-teal-400">ชื่อ สกุล</label>
+                <input type="text" id="edit-name" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-employeeID" class="block text-xs text-teal-600">เบอร์ติดต่อ</label>
-                <input type="text" id="edit-employeeID" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded" disabled>
+                <label for="edit-employeeID" class="block text-xs text-teal-400">เบอร์ติดต่อ</label>
+                <input type="text" id="edit-employeeID" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-department" class="block text-xs text-teal-600">เพิ่มเติม..</label>
-                <input type="text" id="edit-department" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded" disabled>
+                <label for="edit-department" class="block text-xs text-teal-400">เพิ่มเติม..</label>
+                <input type="text" id="edit-department" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
             </div>
-            <div class="flex justify-start space-x-2">
+            <div class="flex justify-start">
                 <button type="button" id="edit-button"
-                    class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600">แก้ไข</button>
-                <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 mr-2 hidden"
+                    class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700">แก้ไข</button>
+                <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2 hidden"
                     onclick="cancelEdit()">ยกเลิก</button>
                 <button type="submit"
-                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 hidden">บันทึก</button>
+                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 hidden">บันทึก</button>
             </div>
         </form>
     </div>
