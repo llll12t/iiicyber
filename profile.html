@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="bg-white flex justify-center items-center max-w-sm mx-auto min-h-screen relative">
+<body class="bg-white flex justify-center items-center max-w-sm mx-auto  relative">
 
     <!-- แก้ไขโหลดิ้งเป็นแบบใหม่ -->
     <div id="loading-overlay" class="fixed inset-0 bg-gray-200 bg-opacity-80 flex items-center justify-center z-50 hidden">
@@ -27,21 +27,21 @@
     </div>
 
     <!-- เนื้อหาหลักของหน้าเว็บ -->
-    <div class="max-w-sm w-full p-6 rounded-xl bg-white shadow-sm text-gray-800">
-        <div class="flex justify-between items-center mb-4">
+    <div class="max-w-sm w-full p-10 ">
+          <!-- Header -->
+          <div class="flex justify-between items-center mb-2">
             <div>
-                <p class="text-gray-800 text-xs">Welcome back</p>
-                <input type="text" class="input-field bg-white text-gray-800 text-xl font-bold border border-white rounded-md p-2"
+                <p class="text-gray-700 text-xs">Welcome back</p>
+                <input type="text" class="input-field bg-white text-gray-800 text-xl font-bold"
                     id="displayName" name="displayName" readonly>
             </div>
-            <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
-                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                    alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
+            <div class=" rounded-lg flex justify-center items-center  bg-gray-200">
+                <img src="https://placehold.co/400x400?text=Profile" alt="Profile Image" id="profileImage"
+                    class="w-10 h-10 rounded-lg  ">
             </div>
         </div>
-        <div class="flex items-center border border-teal-400 p-1 space-x-2 rounded-md mb-4">
-            <input type="text"
-                class="input-field bg-white w-full text-center text-teal-400 text-xs font-bold border border-teal-300 rounded-md p-2"
+        <div class="flex items-center  rounded-md mb-4">
+            <input type="text" class="input-field bg-white w-full text-center text-teal-400 text-xs font-bold border border-teal-300 rounded-md p-2"
                 id="userId" placeholder="Line ID" name="userId" readonly>
         </div>
 
@@ -53,39 +53,39 @@
                 <label for="edit-userID" class="block text-sm">UserID</label>
                 <input type="text" id="edit-userID" class="w-full border px-2 py-1 rounded" disabled>
             </div>
-            <div class="flex my-8">
+            <div class="flex my-2">
                 <div class="w-48">
                     <label for="edit-imageUrl" class="block hidden text-sm">URL รูปภาพ</label>
                     <input type="hidden" id="edit-imageUrl" class="w-full border px-2 py-1 rounded"
                         oninput="updateImagePreview()" disabled>
                     <img id="image-preview"
-                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        src="https://placehold.co/400x400?text=Profile"
                         alt="Image Preview" class="w-20 h-20 rounded">
                 </div>
             </div>
-            <div class="mb-4 hidden" id="image-upload-section">
+            <div class="mb-2 hidden" id="image-upload-section">
                 <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
                 <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded" disabled>
             </div>
-            <div class="mb-4">
-                <label for="edit-name" class="block text-xs text-teal-500">ชื่อ สกุล</label>
-                <input type="text" id="edit-name" class="input-field bg-white text-gray-800 text-md font-bold border border-white rounded-md p-2" disabled>
+            <div class="mb-2">
+                <label for="edit-name" class="block py-2 text-xs text-teal-500">ชื่อ สกุล</label>
+                <input type="text" id="edit-name" class="input-field w-full bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
             </div>
-            <div class="mb-4">
-                <label for="edit-employeeID" class="block text-xs text-teal-500">เบอร์ติดต่อ</label>
-                <input type="text" id="edit-employeeID" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
+            <div class="mb-2">
+                <label for="edit-employeeID" class="block py-2 text-xs text-teal-500">เบอร์ติดต่อ</label>
+                <input type="text" id="edit-employeeID" class="input-field w-full bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
             </div>
-            <div class="mb-4">
-                <label for="edit-department" class="block text-xs text-teal-500">เพิ่มเติม..</label>
-                <input type="text" id="edit-department" class="input-field bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
+            <div class="mb-2">
+                <label for="edit-department" class="block py-2 text-xs text-teal-500">เพิ่มเติม..</label>
+                <input type="text" id="edit-department" class="input-field w-full bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
             </div>
             <div class="flex justify-start">
                 <button type="button" id="edit-button"
-                    class="bg-teal-500 text-white py-1 px-3 rounded hover:bg-teal-700">แก้ไข</button>
-                <button type="button" class="bg-gray-500 text-white py-1 px-3 rounded hover:bg-gray-700 mr-2 hidden"
+                    class="bg-teal-500 text-white mt-2 py-2 px-10 rounded hover:bg-teal-700">แก้ไข</button>
+                <button type="button" class="bg-gray-500 text-white mt-2 py-2 px-10 rounded hover:bg-gray-700 mr-2 hidden"
                     onclick="cancelEdit()">ยกเลิก</button>
                 <button type="submit"
-                    class="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-700 hidden">บันทึก</button>
+                    class="bg-green-500 text-white mt-2 py-2 px-10 rounded hover:bg-green-700 hidden">บันทึก</button>
             </div>
         </form>
     </div>
@@ -214,7 +214,7 @@
                 // กำหนดค่า userId และ displayName ในฟอร์ม
                 document.getElementById('userId').value = userId;
                 document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('profileImage').src = profile.pictureUrl || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+                document.getElementById('profileImage').src = profile.pictureUrl ;
 
             } catch (error) {
                 // ถ้ามีข้อผิดพลาดในการดึงข้อมูลโปรไฟล์ จะทำการล็อกข้อผิดพลาดในคอนโซล
