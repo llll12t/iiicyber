@@ -11,7 +11,7 @@
 </head>
 
 <body class="bg-white flex justify-center items-center max-w-sm mx-auto ">
-    <div class="w-full p-10">
+    <div class="w-full p-6">
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <div>
@@ -111,35 +111,29 @@
             }
         }
 
-        // ฟังก์ชันสำหรับส่งข้อความ Flex
+        
         async function sendFlexMessage() {
             const flexMessage = {
                 type: 'flex',
-                altText: 'ลงทะเบียนเรียบร้อย',
+                altText: 'ข้อมูลลงทะเบียน',
                 contents: {
                     type: 'bubble',
                     styles: {
-                        header: {
-                            backgroundColor: '#E5E7EB'
-                        },
-                        footer: {
-                            backgroundColor: '#D1FAE5'
-                        },
-                        body: {
-                            backgroundColor: '#ffffff'
-                        }
+                        header: { backgroundColor: '#FFFFFF' },
+                        body: { backgroundColor: '#FFFFFF' },
+                        footer: { backgroundColor: '#FFFFFF' }
                     },
                     header: {
                         type: 'box',
-                        layout: 'vertical',
+                        layout: 'horizontal',
                         contents: [
                             {
                                 type: 'text',
                                 text: 'ข้อมูลลงทะเบียนสำเร็จ',
                                 weight: 'bold',
-                                size: 'lg',
-                                color: '#111827',
-                                align: 'center'
+                                size: 'md',
+                                color: '#000000',
+                                flex: 1
                             }
                         ]
                     },
@@ -147,89 +141,109 @@
                         type: 'box',
                         layout: 'vertical',
                         contents: [
+                            // แถว "ชื่อ-สกุล"
                             {
                                 type: 'box',
-                                layout: 'vertical',
-                                margin: 'lg',
-                                spacing: 'sm',
+                                layout: 'horizontal',
+                                margin: 'md',
                                 contents: [
                                     {
-                                        type: 'box',
-                                        layout: 'horizontal',
-                                        contents: [
-                                            {
-                                                type: 'text',
-                                                text: 'ชื่อ-สกุล',
-                                                size: 'sm',
-                                                color: '#6B7280',
-                                                flex: 1
-                                            },
-                                            {
-                                                type: 'text',
-                                                text: document.getElementById('nameId').value,
-                                                size: 'sm',
-                                                color: '#111827',
-                                                align: 'end',
-                                                flex: 2
-                                            }
-                                        ]
+                                        type: 'image',
+                                        url: 'https://img.icons8.com/?size=100&id=zxB19VPoVLjK&format=png&color=000000', // ตัวอย่างไอคอน
+                                        size: 'xs',
+                                        aspectRatio: '1:1'
                                     },
                                     {
-                                        type: 'box',
-                                        layout: 'horizontal',
-                                        contents: [
-                                            {
-                                                type: 'text',
-                                                text: 'เบอร์ติดต่อ',
-                                                size: 'sm',
-                                                color: '#6B7280',
-                                                flex: 1
-                                            },
-                                            {
-                                                type: 'text',
-                                                text: document.getElementById('keynumberId').value,
-                                                size: 'sm',
-                                                color: '#111827',
-                                                align: 'end',
-                                                flex: 2
-                                            }
-                                        ]
+                                        type: 'text',
+                                        text: 'ชื่อ-สกุล',
+                                        size: 'sm',
+                                        color: '#555555',
+                                        flex: 3,
+                                        gravity: 'center',
+                                        margin: 'md'
                                     },
                                     {
-                                        type: 'box',
-                                        layout: 'horizontal',
-                                        contents: [
-                                            {
-                                                type: 'text',
-                                                text: 'อีเมล',
-                                                size: 'sm',
-                                                color: '#6B7280',
-                                                flex: 1
-                                            },
-                                            {
-                                                type: 'text',
-                                                text: document.getElementById('keynumber2Id').value,
-                                                size: 'sm',
-                                                color: '#111827',
-                                                align: 'end',
-                                                flex: 2
-                                            }
-                                        ]
+                                        type: 'text',
+                                        text: document.getElementById('nameId').value,
+                                        size: 'sm',
+                                        color: '#111111',
+                                        align: 'end',
+                                        flex: 5,
+                                        gravity: 'center'
                                     }
                                 ]
-                            }
-                        ]
-                    },
-                    footer: {
-                        type: 'box',
-                        layout: 'vertical',
-                        contents: [
+                            },
                             {
-                                type: 'text',
-                                text: 'รับพ้อย 10 ทันที!',
-                                size: 'sm',
-                                color: '#10B981',
-                                align: 'center'
+                                type: 'separator',
+                                margin: 'md'
+                            },
+                            // แถว "เบอร์ติดต่อ"
+                            {
+                                type: 'box',
+                                layout: 'horizontal',
+                                margin: 'md',
+                                contents: [
+                                    {
+                                        type: 'image',
+                                        url: 'https://img.icons8.com/?size=100&id=60963&format=png&color=000000', // ตัวอย่างไอคอน
+                                        size: 'xs',
+                                        aspectRatio: '1:1'
+                                    },
+                                    {
+                                        type: 'text',
+                                        text: 'เบอร์ติดต่อ',
+                                        size: 'sm',
+                                        color: '#555555',
+                                        flex: 3,
+                                        gravity: 'center',
+                                        margin: 'md'
+                                    },
+                                    {
+                                        type: 'text',
+                                        text: document.getElementById('keynumberId').value,
+                                        size: 'sm',
+                                        color: '#111111',
+                                        align: 'end',
+                                        flex: 5,
+                                        gravity: 'center'
+                                    }
+                                ]
+                            },
+                            {
+                                type: 'separator',
+                                margin: 'md'
+                            },
+                            // แถว "เพิ่มเติม"
+                            {
+                                type: 'box',
+                                layout: 'horizontal',
+                                margin: 'md',
+                                contents: [
+                                    {
+                                        type: 'image',
+                                        url: 'https://img.icons8.com/?size=100&id=61873&format=png&color=000000', // ตัวอย่างไอคอน
+                                        size: 'xs',
+                                        aspectRatio: '1:1'
+                                    },
+                                    {
+                                        type: 'text',
+                                        text: 'เพิ่มเติม',
+                                        size: 'sm',
+                                        color: '#555555',
+                                        flex: 3,
+                                        gravity: 'center',
+                                        margin: 'md'
+                                    },
+                                    {
+                                        type: 'text',
+                                        text: document.getElementById('keynumber2Id').value,
+                                        size: 'sm',
+                                        color: '#111111',
+                                        align: 'end',
+                                        flex: 5,
+                                        gravity: 'center'
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -238,6 +252,7 @@
 
             await liff.sendMessages([flexMessage]);
         }
+
 
         let url = `${WEB_APP_URL}`;
         let fileInput = document.getElementById("file");
@@ -270,7 +285,7 @@
 
                 reader.readAsDataURL(file);
             } else {
-                imgPreview.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+                imgPreview.src = "https://placehold.co/400x400?text=Profile";
             }
         }
 
