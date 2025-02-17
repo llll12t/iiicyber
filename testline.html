@@ -13,21 +13,36 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   
   <script>
+    // ฟังก์ชันสำหรับตรวจสอบและแสดงข้อความสั้นๆ ตาม user agent
+    function getDeviceType() {
+      const ua = navigator.userAgent;
+      if (/android/i.test(ua)) {
+        return "( ANDROID )";
+      } else if (/iPhone|iPad|iPod/i.test(ua)) {
+        return "( IOS )";
+      } else if (/Windows/i.test(ua)) {
+        return "( WINDOW )";
+      } else if (/Macintosh/i.test(ua)) {
+        return "( MAC )";
+      } else {
+        return "(UNKNOWN)";
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function(){
-      // ตรวจสอบว่ามาจาก LINE (มือถือ) หรือไม่
-      // วิธีที่ง่ายคือเช็คใน navigator.userAgent ว่ามีคำว่า "Line" อยู่หรือไม่
+      // ตรวจสอบว่าเปิดผ่าน LINE (มือถือ) หรือไม่
       if (!navigator.userAgent.includes('Line')) {
+        const deviceType = getDeviceType();
         document.body.innerHTML = `
           <div class="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-4">
             <h1 class="text-2xl font-bold mb-4">ขออภัย กรุณาเปิดใน LINE ของมือถือน้าา~</h1>
-            <p class="text-lg">คุณกำลังใช้งานผ่าน: ${navigator.userAgent}</p>
+            <p class="text-lg">คุณกำลังใช้งานผ่าน: ${deviceType}</p>
           </div>
         `;
       } else {
         // หากอยู่ใน LINE สามารถเริ่มต้น LIFF ได้ตามต้องการ
         liff.init({ liffId: "2006806033-9Oo7M2k0" })
           .then(() => {
-            // LIFF initialized
             console.log("LIFF initialized");
           })
           .catch((err) => {
