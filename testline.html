@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <!-- ตั้งค่า viewport เพื่อป้องกันการซูม ย่อหรือขยาย -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ฟอร์มบันทึกข้อมูลพนักงาน (LINE LIFF)</title>
+  
+  <!-- LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+  
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      // ตรวจสอบว่ามาจาก LINE (มือถือ) หรือไม่
+      // วิธีที่ง่ายคือเช็คใน navigator.userAgent ว่ามีคำว่า "Line" อยู่หรือไม่
+      if (!navigator.userAgent.includes('Line')) {
+        document.body.innerHTML = `
+          <div class="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-4">
+            <h1 class="text-2xl font-bold mb-4">ขออภัย กรุณาเปิดใน LINE ของมือถือน้าา~</h1>
+            <p class="text-lg">คุณกำลังใช้งานผ่าน: ${navigator.userAgent}</p>
+          </div>
+        `;
+      } else {
+        // หากอยู่ใน LINE สามารถเริ่มต้น LIFF ได้ตามต้องการ
+        liff.init({ liffId: "2006029649-8GP41NAg" })
+          .then(() => {
+            // LIFF initialized
+            console.log("LIFF initialized");
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }
+    });
+  </script>
+</head>
+<body>
+  <!-- ฟอร์มบันทึกข้อมูลพนักงาน -->
+  <div class="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-4">
+    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-6 text-center">บันทึกข้อมูลพนักงาน</h2>
+      
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="employeeName">
+          ชื่อพนักงาน
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" 
+               id="employeeName" 
+               type="text" 
+               placeholder="กรอกชื่อพนักงาน">
+      </div>
+      
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="employeeID">
+          รหัสพนักงาน
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" 
+               id="employeeID" 
+               type="text" 
+               placeholder="กรอกรหัสพนักงาน">
+      </div>
+      
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="department">
+          แผนก
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 focus:outline-none focus:shadow-outline" 
+               id="department" 
+               type="text" 
+               placeholder="กรอกชื่อแผนก">
+      </div>
+      
+      <div class="flex items-center justify-between">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+                type="submit">
+          บันทึก
+        </button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
