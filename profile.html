@@ -4,332 +4,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data</title>
-    <!-- Tailwind CSS -->
+    <title>ข้อมูลผู้ใช้งาน | Modern White Theme</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .input-field-view {
+            background-color: #f3f4f6; /* bg-gray-100 */
+            color: #374151; /* text-gray-700 */
+            border: 1px solid #e5e7eb; /* border-gray-300 */
+            cursor: default;
+        }
+        .input-field-edit:focus {
+            outline: none;
+            border-color: #000000; /* Black border on focus */
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+        }
+        .input-field-edit {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db; /* border-gray-300 */
+        }
+        /* Custom file input button */
+        .file-input-label {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.25rem; /* py-3 px-5 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-sm */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+            transition-duration: 150ms;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
 </head>
 
-<body class="bg-white flex justify-center items-center max-w-sm mx-auto  relative">
+<body class="bg-white flex justify-center items-start min-h-screen py-8">
 
-    <!-- แก้ไขโหลดิ้งเป็นแบบใหม่ -->
-    <div id="loading-overlay" class="fixed inset-0 bg-gray-200 bg-opacity-80 flex items-center justify-center z-50 hidden">
+    <div id="loading-overlay" class="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50 hidden">
         <div class="flex flex-col items-center">
-            <svg class="animate-spin h-12 w-12 text-teal-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin h-12 w-12 text-black mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span class="text-teal-500 text-lg">กำลังโหลด...</span>
+            <span class="text-gray-700 text-lg">กำลังโหลดข้อมูล...</span>
         </div>
     </div>
 
-    <!-- เนื้อหาหลักของหน้าเว็บ -->
-    <div class="max-w-sm w-full p-10 ">
-          <!-- Header -->
-          <div class="flex justify-between items-center mb-2">
+    <div class="w-full max-w-md p-8 space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
             <div>
-                <p class="text-gray-700 text-xs">Welcome back</p>
-                <input type="text" class="input-field bg-white text-gray-800 text-xl font-bold"
-                    id="displayName" name="displayName" readonly>
+                <p class="text-gray-600 text-sm">Welcome back,</p>
+                <input type="text" class="bg-transparent text-gray-900 text-2xl font-bold w-full p-0 border-0 focus:ring-0"
+                    id="displayName" name="displayName" readonly value="Display Name">
             </div>
-            <div class=" rounded-lg flex justify-center items-center  bg-gray-200">
-                <img src="https://placehold.co/400x400?text=Profile" alt="Profile Image" id="profileImage"
-                    class="w-10 h-10 rounded-lg  ">
+            <div class="flex-shrink-0">
+                <img src="https://placehold.co/100x100/E2E8F0/AAAAAA?text=P" alt="Profile Image" id="profileImage"
+                    class="w-12 h-12 rounded-full shadow-lg object-cover">
             </div>
         </div>
-        <div class="flex items-center  rounded-md mb-4">
-            <input type="text" class="input-field bg-white w-full text-center text-teal-400 text-xs font-bold border border-teal-300 rounded-md p-2"
-                id="userId" placeholder="Line ID" name="userId" readonly>
+
+        <!-- User Line ID (Readonly) -->
+        <div>
+            <label for="userId" class="block mb-1 text-xs font-medium text-gray-500">LINE User ID</label>
+            <input type="text" class="input-field-view w-full p-3 text-sm text-gray-700 rounded-lg"
+                id="userId" placeholder="Line ID (auto-filled)" name="userId" readonly>
         </div>
 
-        <form id="edit-form">
-
+        <form id="edit-form" class="space-y-6">
             <input type="hidden" id="edit-id">
+            <input type="hidden" id="edit-userID"> <!-- This will be populated from LIFF/searchData -->
+            <input type="hidden" id="edit-imageUrl-current"> <!-- To store current image URL from server -->
 
-            <div class="mb-4 hidden">
-                <label for="edit-userID" class="block text-sm">UserID</label>
-                <input type="text" id="edit-userID" class="w-full border px-2 py-1 rounded" disabled>
-            </div>
-            <div class="flex my-2">
-                <div class="w-48">
-                    <label for="edit-imageUrl" class="block hidden text-sm">URL รูปภาพ</label>
-                    <input type="hidden" id="edit-imageUrl" class="w-full border px-2 py-1 rounded"
-                        oninput="updateImagePreview()" disabled>
-                    <img id="image-preview"
-                        src="https://placehold.co/400x400?text=Profile"
-                        alt="Image Preview" class="w-20 h-20 rounded">
+            <!-- Image Section -->
+            <div class="space-y-3">
+                <label class="block text-sm font-medium text-gray-700">รูปโปรไฟล์</label>
+                <div class="flex items-center space-x-4">
+                    <div class="flex-shrink-0">
+                        <img id="image-preview" src="https://placehold.co/400x400/E2E8F0/AAAAAA?text=รูป" alt="Image Preview"
+                             class="h-24 w-24 object-cover rounded-lg bg-gray-100 border border-gray-300">
+                    </div>
+                    <div id="image-upload-section" class="flex-grow hidden">
+                         <label for="edit-image"
+                               class="file-input-label text-white bg-black hover:bg-gray-800 w-full sm:w-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" class="mr-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            เปลี่ยนรูป
+                        </label>
+                        <input type="file" id="edit-image" accept="image/*" class="hidden">
+                        <p class="text-gray-500 text-xs mt-1">เลือกไฟล์ใหม่เพื่อเปลี่ยน</p>
+                    </div>
                 </div>
             </div>
-            <div class="mb-2 hidden" id="image-upload-section">
-                <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
-                <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded" disabled>
+
+            <!-- Form Fields -->
+            <div>
+                <label for="edit-name" class="block mb-1 text-sm font-medium text-gray-700">ชื่อ-สกุล</label>
+                <input type="text" id="edit-name" class="input-field-view w-full p-3 text-sm rounded-lg" disabled>
             </div>
-            <div class="mb-2">
-                <label for="edit-name" class="block py-2 text-xs text-teal-500">ชื่อ สกุล</label>
-                <input type="text" id="edit-name" class="input-field w-full bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
+            <div>
+                <label for="edit-employeeID" class="block mb-1 text-sm font-medium text-gray-700">เบอร์ติดต่อ</label>
+                <input type="text" id="edit-employeeID" class="input-field-view w-full p-3 text-sm rounded-lg" disabled>
             </div>
-            <div class="mb-2">
-                <label for="edit-employeeID" class="block py-2 text-xs text-teal-500">เบอร์ติดต่อ</label>
-                <input type="text" id="edit-employeeID" class="input-field w-full bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
+            <div>
+                <label for="edit-department" class="block mb-1 text-sm font-medium text-gray-700">ข้อมูลเพิ่มเติม</label>
+                <input type="text" id="edit-department" class="input-field-view w-full p-3 text-sm rounded-lg" disabled>
             </div>
-            <div class="mb-2">
-                <label for="edit-department" class="block py-2 text-xs text-teal-500">เพิ่มเติม..</label>
-                <input type="text" id="edit-department" class="input-field w-full bg-white text-gray-800 text-md font-bold border border-gray-300 rounded-md p-2" disabled>
-            </div>
-            <div class="flex justify-start">
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0 pt-4">
                 <button type="button" id="edit-button"
-                    class="bg-teal-500 text-white mt-2 py-2 px-10 rounded hover:bg-teal-700">แก้ไข</button>
-                <button type="button" class="bg-gray-500 text-white mt-2 py-2 px-10 rounded hover:bg-gray-700 mr-2 hidden"
-                    onclick="cancelEdit()">ยกเลิก</button>
-                <button type="submit"
-                    class="bg-green-500 text-white mt-2 py-2 px-10 rounded hover:bg-green-700 hidden">บันทึก</button>
+                    class="w-full bg-black text-white p-3 rounded-lg shadow-md hover:bg-gray-800 font-semibold transition-colors">
+                    แก้ไขข้อมูล
+                </button>
+                <button type="submit" id="save-button"
+                    class="w-full bg-black text-white p-3 rounded-lg shadow-md hover:bg-gray-800 font-semibold transition-colors hidden">
+                    บันทึกการเปลี่ยนแปลง
+                </button>
+                <button type="button" id="cancel-button"
+                    class="w-full bg-gray-600 text-white p-3 rounded-lg shadow-md hover:bg-gray-700 font-semibold transition-colors hidden"
+                    onclick="cancelEdit()">
+                    ยกเลิก
+                </button>
             </div>
         </form>
     </div>
 
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxh6MnlWyyyk_zlppsPv8acuyckmCppUaFHuSbEGV2uCU3pHW-dYIpvWVAn12QuyHEW/exec';
-        const LIFF_ID = '2006806033-LlJE1nO7'; // ใส่ LIFF ID ของคุณที่นี่
+        const LIFF_ID = '2006806033-LlJE1nO7'; // YOUR LIFF ID
 
-        let latestData = {};
+        let latestData = {}; // To store the fetched data for reset purposes
 
-        // ฟังก์ชันสำหรับล็อกหรือปลดล็อกฟอร์มและจัดการการแสดงผลปุ่ม
+        const form = document.getElementById('edit-form');
+        const inputs = [
+            document.getElementById('edit-name'),
+            document.getElementById('edit-employeeID'),
+            document.getElementById('edit-department')
+        ];
+        const editButton = document.getElementById('edit-button');
+        const saveButton = document.getElementById('save-button');
+        const cancelButton = document.getElementById('cancel-button');
+        const imageUploadSection = document.getElementById('image-upload-section');
+        const imagePreview = document.getElementById('image-preview');
+        const imageFileInput = document.getElementById('edit-image');
+        const currentImageUrlHiddenInput = document.getElementById('edit-imageUrl-current');
+
+
+        function setFormInputs(data) {
+            document.getElementById('edit-id').value = data.keyid || '';
+            document.getElementById('edit-userID').value = data.userlineId || ''; // Ensure this is correctly populated
+            document.getElementById('edit-name').value = data.nameId || '';
+            document.getElementById('edit-employeeID').value = data.keynumberId || '';
+            document.getElementById('edit-department').value = data.keynumber2Id || '';
+            currentImageUrlHiddenInput.value = data.fileLink || '';
+            imagePreview.src = data.fileLink || 'https://placehold.co/400x400/E2E8F0/AAAAAA?text=รูป';
+        }
+
         function toggleFormEditing(enable) {
-            const inputs = document.querySelectorAll('#edit-form input');
-            const saveButton = document.querySelector('#edit-form button[type="submit"]');
-            const cancelButton = document.querySelector('#edit-form button[type="button"]:not(#edit-button)');
-            const imageUploadSection = document.getElementById('image-upload-section');
-
             inputs.forEach(input => {
-                input.disabled = !enable; // ปลดล็อก input
+                input.disabled = !enable;
+                if (enable) {
+                    input.classList.remove('input-field-view');
+                    input.classList.add('input-field-edit');
+                } else {
+                    input.classList.remove('input-field-edit');
+                    input.classList.add('input-field-view');
+                }
             });
 
+            imageFileInput.disabled = !enable; // Enable/disable file input
+            imageFileInput.value = ''; // Clear file input on toggle
+
             if (enable) {
+                editButton.classList.add('hidden');
                 saveButton.classList.remove('hidden');
                 cancelButton.classList.remove('hidden');
-                imageUploadSection.classList.remove('hidden'); // แสดงส่วนอัปโหลดรูปภาพ
-                document.getElementById('edit-button').classList.add('hidden'); // ซ่อนปุ่ม Edit เมื่อทำการแก้ไข
+                imageUploadSection.classList.remove('hidden');
             } else {
+                editButton.classList.remove('hidden');
                 saveButton.classList.add('hidden');
                 cancelButton.classList.add('hidden');
-                imageUploadSection.classList.add('hidden'); // ซ่อนส่วนอัปโหลดรูปภาพ
-                document.getElementById('edit-button').classList.remove('hidden'); // แสดงปุ่ม Edit
+                imageUploadSection.classList.add('hidden');
+                // Reset preview to current server image if editing is cancelled
+                imagePreview.src = currentImageUrlHiddenInput.value || 'https://placehold.co/400x400/E2E8F0/AAAAAA?text=รูป';
             }
         }
 
-        // ฟังก์ชันสำหรับอัปเดตการแสดงผลของรูปภาพตาม URL ที่ป้อน
-        function updateImagePreview() {
-            const imageUrl = document.getElementById('edit-imageUrl').value;
-            const imagePreview = document.getElementById('image-preview');
-            imagePreview.src = imageUrl ? imageUrl : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'; // อัปเดต src ของรูปภาพ
-        }
-
-        // ฟังก์ชันเพื่อแสดงแอนิเมชันโหลด
         function showLoading() {
             document.getElementById('loading-overlay').classList.remove('hidden');
         }
 
-        // ฟังก์ชันเพื่อซ่อนแอนิเมชันโหลด
         function hideLoading() {
             document.getElementById('loading-overlay').classList.add('hidden');
         }
 
         async function searchDataByUserlineId(userlineId) {
-            showLoading(); // แสดงแอนิเมชันโหลดเฉพาะในฟังก์ชันนี้
+            showLoading();
             try {
-                // ส่ง userlineId เป็นพารามิเตอร์ในการค้นหา
                 const response = await fetch(`${WEB_APP_URL}?method=getUserData&userlineId=${encodeURIComponent(userlineId)}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
 
                 if (Array.isArray(data) && data.length > 0) {
-                    // ใช้ข้อมูลจากแถวสุดท้ายที่พบ
-                    latestData = data[data.length - 1];
-
-                    // กรอกข้อมูลลงในฟอร์ม
-                    document.getElementById('edit-id').value = latestData.keyid;
-                    document.getElementById('edit-userID').value = latestData.userlineId;
-                    document.getElementById('edit-name').value = latestData.nameId;
-                    document.getElementById('edit-employeeID').value = latestData.keynumberId;
-                    document.getElementById('edit-department').value = latestData.keynumber2Id;
-                    document.getElementById('edit-imageUrl').value = latestData.fileLink;
-
-                    updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
+                    latestData = data[data.length - 1]; // Get the last record
+                    setFormInputs(latestData);
                 } else {
+                    latestData = {}; // Clear if no data
+                    setFormInputs({}); // Reset form fields
                     Swal.fire({
-                        title: 'คุณยังไม่ได้ลงทะเบียน',
-                        text: 'กรุณาลงทะเบียนก่อนใช้งาน',
+                        title: 'ไม่พบข้อมูล',
+                        text: 'ดูเหมือนคุณยังไม่ได้ลงทะเบียน หรือไม่มีข้อมูลในระบบ',
                         icon: 'warning',
-                        confirmButtonText: 'ตกลง'
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#000000',
                     });
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
                 Swal.fire({
                     title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถดึงข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                    text: 'ไม่สามารถดึงข้อมูลได้: ' + error.message,
                     icon: 'error',
-                    confirmButtonText: 'ตกลง'
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#000000',
                 });
             } finally {
-                hideLoading(); // ซ่อนแอนิเมชันโหลด
+                hideLoading();
+                toggleFormEditing(false); // Ensure form is in view mode initially
             }
         }
-
-        // เริ่มต้นด้วยการล็อกฟอร์มและซ่อนปุ่ม
-        window.onload = async () => {
-            try {
-                await initializeLiff();
-                await getUserProfile(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
-            } catch (error) {
-                console.error('Initialization error:', error);
-            } finally {
-                toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
-            }
-        };
-
+        
         async function initializeLiff() {
             try {
-                await liff.init({ liffId: `${LIFF_ID}` }); // ใส่ LIFF ID ของคุณที่นี่
-                if (liff.isLoggedIn()) {
-                    const profile = await liff.getProfile();
-                    const userlineId = profile.userId; // ดึง userId จากโปรไฟล์
-                    searchDataByUserlineId(userlineId); // ค้นหาข้อมูลตาม userId
-                } else {
+                await liff.init({ liffId: LIFF_ID });
+                if (!liff.isLoggedIn()) {
                     liff.login();
+                    return; // Stop further execution until login completes and page reloads
                 }
-            } catch (error) {
-                console.error('LIFF Initialization failed', error);
-            }
-        }
-
-        // ฟังก์ชันนี้ดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LIFF
-        async function getUserProfile() {
-            try {
-                // รับข้อมูลโปรไฟล์ของผู้ใช้
+                // If logged in, proceed to get profile and data
                 const profile = await liff.getProfile();
-                const userId = profile.userId;
-                // กำหนดค่า userId และ displayName ในฟอร์ม
-                document.getElementById('userId').value = userId;
-                document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('profileImage').src = profile.pictureUrl ;
+                document.getElementById('userId').value = profile.userId || 'N/A';
+                document.getElementById('displayName').value = profile.displayName || 'User';
+                document.getElementById('profileImage').src = profile.pictureUrl || 'https://placehold.co/100x100/E2E8F0/AAAAAA?text=P';
+                
+                // Set the user ID for the form (used in submission)
+                document.getElementById('edit-userID').value = profile.userId;
+
+                await searchDataByUserlineId(profile.userId);
 
             } catch (error) {
-                // ถ้ามีข้อผิดพลาดในการดึงข้อมูลโปรไฟล์ จะทำการล็อกข้อผิดพลาดในคอนโซล
-                console.error('Error getting profile data:', error);
+                console.error('LIFF Initialization or Profile Fetch failed:', error);
+                 Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถเริ่มต้น LIFF หรือดึงข้อมูลโปรไฟล์ได้: ' + error.message,
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#000000',
+                });
+                hideLoading(); // Ensure loading is hidden on error
+                toggleFormEditing(false); // Ensure form is in view mode
             }
         }
 
-        document.getElementById('edit-button').addEventListener('click', function () {
-            toggleFormEditing(true); // ปลดล็อกฟอร์มเมื่อกดปุ่มแก้ไข
+        window.onload = () => {
+            initializeLiff();
+        };
+
+        editButton.addEventListener('click', () => {
+            toggleFormEditing(true);
         });
 
-        document.getElementById('edit-form').addEventListener('submit', async function (e) {
-            e.preventDefault();
+        imageFileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
 
-            // ไม่แสดงแอนิเมชันโหลดในฟังก์ชันนี้
-            // แต่ยังคงใช้ SweetAlert2 เพื่อแสดงการบันทึกข้อมูล
+        function cancelEdit() {
+            setFormInputs(latestData); // Reset form to last fetched data
+            toggleFormEditing(false);
+        }
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            saveButton.disabled = true;
+            saveButton.innerHTML = '<div class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>กำลังบันทึก...</div>';
 
             const id = document.getElementById('edit-id').value;
-            const userID = document.getElementById('edit-userID').value;
+            const userID = document.getElementById('edit-userID').value; // This should be the line_user_id
             const name = document.getElementById('edit-name').value;
-            const employeeID = document.getElementById('edit-employeeID').value;
-            const department = document.getElementById('edit-department').value;
-            const imageFile = document.getElementById('edit-image').files[0];
+            const employeeID = document.getElementById('edit-employeeID').value; //เบอร์ติดต่อ
+            const department = document.getElementById('edit-department').value; //เพิ่มเติม
+            const imageFile = imageFileInput.files[0];
 
-            let imageUrl = document.getElementById('edit-imageUrl').value;
+            let base64ImageOrUrl = currentImageUrlHiddenInput.value; // Default to current URL
 
-            // แสดงผลการโหลดด้วย SweetAlert2
-            Swal.fire({
-                title: 'กำลังบันทึกข้อมูล...',
-                text: 'กรุณารอขณะบันทึกข้อมูลของคุณ',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading(); // แสดง spinner
+            if (imageFile) {
+                try {
+                    base64ImageOrUrl = await getBase64(imageFile);
+                } catch (error) {
+                    console.error("Error converting image to base64", error);
+                    Swal.fire({ title: 'เกิดข้อผิดพลาด', text: 'ไม่สามารถแปลงรูปภาพได้', icon: 'error', confirmButtonColor: '#000000'});
+                    saveButton.disabled = false;
+                    saveButton.innerHTML = 'บันทึกการเปลี่ยนแปลง';
+                    return;
                 }
-            });
+            }
+
+            // Construct form data for GAS
+            const formData = new URLSearchParams();
+            formData.append('method', 'updateData');
+            formData.append('id', id); // keyid from spreadsheet
+            formData.append('userID', userID); // LINE User ID
+            formData.append('name', name);
+            formData.append('employeeID', employeeID);
+            formData.append('department', department);
+            formData.append('imageUrl', base64ImageOrUrl); // This will be base64 string if new image, or existing URL if not changed
+
 
             try {
-                let result;
-                if (imageFile) {
-                    const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
-                    result = await updateData(id, userID, name, employeeID, department, base64Image);
-                } else {
-                    result = await updateData(id, userID, name, employeeID, department, imageUrl);
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: formData // No need for JSON.stringify with URLSearchParams, GAS expects x-www-form-urlencoded
+                });
+                const resultText = await response.text();
+                
+                if (!response.ok) { // Check if response status is not 2xx
+                     throw new Error(resultText || `Server error: ${response.status}`);
                 }
-
-                // ตรวจสอบผลลัพธ์ที่ได้รับ
-                if (result && result.includes('Data updated')) {
+                // Assuming GAS returns "Data updated successfully" or similar plain text on success
+                if (resultText.toLowerCase().includes('updated') || resultText.toLowerCase().includes('success')) {
                     Swal.fire({
                         title: 'สำเร็จ',
                         text: 'บันทึกข้อมูลเรียบร้อยแล้ว!',
                         icon: 'success',
-                        confirmButtonText: 'ตกลง'
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#000000'
                     });
-                    await initializeLiff(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
+                    await searchDataByUserlineId(userID); // Refresh data from server
+                    toggleFormEditing(false);
                 } else {
-                    throw new Error(result || 'ไม่สามารถบันทึกข้อมูลได้');
+                    // If response is OK but text doesn't indicate success as expected
+                    throw new Error(resultText || 'การบันทึกอาจไม่สำเร็จ กรุณาตรวจสอบ');
                 }
 
             } catch (error) {
                 console.error('Error saving data:', error);
                 Swal.fire({
                     title: 'เกิดข้อผิดพลาด',
-                    text: error.message || 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                    text: 'ไม่สามารถบันทึกข้อมูลได้: ' + error.message,
                     icon: 'error',
-                    confirmButtonText: 'ตกลง'
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#000000'
                 });
             } finally {
-                // ซ่อนแอนิเมชันโหลดไม่ได้ เนื่องจากไม่ได้แสดงตอนบันทึก
-                cancelEdit();
+                saveButton.disabled = false;
+                saveButton.innerHTML = 'บันทึกการเปลี่ยนแปลง';
             }
         });
 
-        // ฟังก์ชันยกเลิกการแก้ไขและรีเซ็ตฟอร์ม
-        function cancelEdit() {
-            document.getElementById('edit-form').reset();
-            document.getElementById('edit-id').value = latestData.keyid || '';
-            document.getElementById('edit-userID').value = latestData.userlineId || '';
-            document.getElementById('edit-name').value = latestData.nameId || '';
-            document.getElementById('edit-employeeID').value = latestData.keynumberId || '';
-            document.getElementById('edit-department').value = latestData.keynumber2Id || '';
-            document.getElementById('edit-imageUrl').value = latestData.fileLink || '';
-
-            updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
-            toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
-        }
-
-        async function updateData(id, userID, name, employeeID, department, base64Image) {
-            const response = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `method=updateData&id=${encodeURIComponent(id)}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
-            });
-            const result = await response.text();
-
-            // ตรวจสอบว่าผลลัพธ์ที่ได้มีเนื้อหาหรือไม่
-            if (!result || result.trim() === '') {
-                throw new Error('Empty response from server');
-            }
-
-            return result;
-        }
-
-        // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
         function getBase64(file) {
             return new Promise((resolve, reject) => {
-                let reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = error => reject(error);
+                const reader = new FileReader();
                 reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]); // Get only base64 part
+                reader.onerror = error => reject(error);
             });
         }
-
     </script>
 </body>
-
 </html>
